@@ -1,7 +1,7 @@
 public class Cache {
 	
-	int size;
-	int lineSize;
+	int size; // in KB
+	int wordsPerLine; // in words
 	int associativity;
 	int hitPolicy; // 0 for write back, 1 for write through
 	int missPolicy; // 0 for write allocate, 1 for write around
@@ -12,14 +12,15 @@ public class Cache {
 	int[] map;
 	int[] dirtyBits;
 	
-	public Cache(int size, int lineSize, int hitTime, int penalty, int assoc, int hitPolicy) {
-		this.size 		= size;
-		this.hitTime 	= hitTime;
-		this.associativity = assoc;
-		this.penalty 	= penalty;
-		this.hitPolicy 	= hitPolicy;
+	public Cache(int size, int wordsPerLine, int hitTime, int penalty, int assoc, int hitPolicy) {
+		this.size 			= size;
+		this.hitTime 		= hitTime;
+		this.associativity 	= assoc;
+		this.penalty 		= penalty;
+		this.hitPolicy 		= hitPolicy;
+		this.wordsPerLine 	= wordsPerLine;
 		
-		numLines = size/lineSize;
+		numLines = size/(wordsPerLine * 4);
 		map = new int[numLines];
 		dirtyBits = new int[numLines];
 	}
@@ -45,12 +46,12 @@ public class Cache {
 	public int[] map(int address) {
 		// TESTED AND  WORKING (all sheet examples were tests)
 		
-		int offset = address & makeNOnes(log2(lineSize));
+		int offset = address & makeNOnes(log2(wordsPerLine));
 		offset <<= 2;
-		int index 	= address & (makeNOnes(log2(numLines/associativity)) << log2(lineSize));
-		index = index >> log2(lineSize);
+		int index 	= address & (makeNOnes(log2(numLines/associativity)) << log2(wordsPerLine));
+		index = index >> log2(wordsPerLine);
 		
-		int tag = address >> ((log2(lineSize) + log2(numLines/associativity)));
+		int tag = address >> ((log2(wordsPerLine) + log2(numLines/associativity)));
 		
 //		System.out.println(Integer.toBinaryString(tag) + " " + Integer.toBinaryString(index) + " " + Integer.toBinaryString(offset));
 //		System.out.println(tag + " " + index + " " + offset);
@@ -64,6 +65,9 @@ public class Cache {
 	}
 	
 	public void write(Integer address, Integer value) {
+	}
+	
+	public static void main(String[] args) {
 	}
 	
 }

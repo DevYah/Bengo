@@ -30,8 +30,10 @@ public class DataFetcher {
 			Integer res = caches[i].read(address);
 			if (res == null) {
 				// miss, apply penalty 
+				// FIXME fix the the logic of penalty
 				Bengo.CURRENT_CYCLE += caches[i].penalty;
 			}else {
+				// FIXME fix the the logic of penalty
 				Bengo.CURRENT_CYCLE += caches[i].hitTime;
 				return res;
 			}
