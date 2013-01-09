@@ -11,6 +11,7 @@ public class Cache {
 	int numLines;
 	int[] map;
 	int[] dirtyBits;
+	int[] tags;
 	
 	public Cache(int size, int wordsPerLine, int hitTime, int penalty, int assoc, int hitPolicy) {
 		this.size 			= size;
@@ -20,9 +21,10 @@ public class Cache {
 		this.hitPolicy 		= hitPolicy;
 		this.wordsPerLine 	= wordsPerLine;
 		
-		numLines = size/(wordsPerLine * 4);
-		map = new int[numLines];
-		dirtyBits = new int[numLines];
+		numLines 	= size/(wordsPerLine * 4);
+		map 		= new int[numLines];
+		dirtyBits 	= new int[numLines];
+		tags 		= new int[numLines];
 	}
 	
 	/*
@@ -33,7 +35,7 @@ public class Cache {
 	public static int makeNOnes(int n) {
 		int res = 0;
 		for (int i = 0; i < n; i++) {
-			res += Math.pow(2, i);
+			res += 2 << i;
 		}
 		return res;
 	}
