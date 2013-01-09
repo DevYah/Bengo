@@ -4,7 +4,7 @@ public class DataFetcher {
 	 * This is a container for the caches and memory
 	 */
 	
-	int levels; 
+	int levels;
 	Cache[] caches;
 	Memory mem;
 	
