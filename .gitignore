@@ -4,3 +4,6 @@
 *.jar
 *.war
 *.ear
+*.xml
+*.mf
+*.properties
