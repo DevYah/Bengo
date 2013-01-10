@@ -7,12 +7,14 @@ public class DataFetcher {
 	Cache[] caches;
 	Memory mem;
 	
-	public DataFetcher(int levels, int numlines1, int numlines2, int numlines3,
-  					   int lineSize1,  int lineSize2, int lineSize3,
-  					   int hitTime1,  int hitTime2, int hitTime3,
-					   int penalty1, int penalty2, int penalty3, 
-					   int assoc1, int assoc2, int assoc3,
-  					   int policy1,  int policy2, int policy3) {
+	public DataFetcher(int levels,
+						int numlines1, 	int numlines2, 	int numlines3,
+  					   	int lineSize1, 	int lineSize2, 	int lineSize3,
+  					   	int hitTime1,  	int hitTime2, 	int hitTime3,
+  					   	int penalty1, 	int penalty2, 	int penalty3,
+  					   	int assoc1, 	int assoc2, 	int assoc3,
+  					   	int policy1,  	int policy2, 	int policy3) {
+
 		this.levels = levels;
 		caches = new Cache[levels];
 		
