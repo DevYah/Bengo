@@ -22,6 +22,7 @@ public class Bengo {
 	int multTime;
 	int divideTime;
 	
+	static Memory memory; 
 	// 	ROB, Reservation Station, Instruction, Cache & Memory
 	ArrayList<Instruction> instructs;
 	ReservationStation[] reservationStations;
@@ -72,5 +73,24 @@ public class Bengo {
 		Bengo bengo = new Bengo();
 		
 	
+	}
+}
+
+class CircularQueue <T> {
+	int head, tail;
+	T queue[];
+	
+	public CircularQueue(int size) {
+		head = tail = 0;
+		queue = (T[]) new Object[size];
+	}
+	public void enqueue(T val) {
+		queue[tail++] = val;
+		tail %= queue.length;
+	}
+	public T dequeue(int val) {
+		T ret = queue[head++];
+		head %= queue.length;
+		return ret;
 	}
 }

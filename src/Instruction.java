@@ -4,6 +4,8 @@ public class Instruction {
 	int fetchTime, issueTime, excuteTime, writeTime, commitTime; 
 	String[] fields;
 	String status = "fetch";
+    ReservationStation station;
+//>>>>>>> memory
 	
 	public Instruction(int binary) {
 		// parser to get the type, rd, rs, rm
@@ -20,8 +22,20 @@ public class Instruction {
 		writeTime  	= -1;
 		commitTime 	= -1;
 	}
+// <<<<<<< master (Nada)
 	public String toString()
 	{
 		return fields[0] + " " + fields[1] + " " + fields[2] + " " + fields[3];
 	}
+// =======
+
+//    public void execute() {
+//        if (fields[0].equals("LW")) {
+//            station.setA(station.getVj() + station.getA());
+//            int val = Bengo.memory.read(station.getA());
+//            
+//        }
+//    }
+// >>>>>>> memory
 }
+

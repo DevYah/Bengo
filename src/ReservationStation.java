@@ -50,4 +50,11 @@ public class ReservationStation {
 		this.instruction = instruction;
 	}
 
+	public String getVk() {
+		return vk;
+	}
+	
+	public String getVj() {
+		return vj;
+	}
 }
