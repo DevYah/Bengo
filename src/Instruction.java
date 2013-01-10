@@ -19,8 +19,10 @@ public class Instruction {
 	}
 
     public void execute() {
-        if (type.equals("LW")) {
+        if (fields[0].equals("LW")) {
             station.setA(station.getVj() + station.getA());
+            int val = Bengo.memory.read(station.getA());
+            
         }
     }
 }
