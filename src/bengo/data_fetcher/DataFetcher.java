@@ -1,7 +1,6 @@
 package bengo.data_fetcher;
 
 import bengo.Bengo;
-import bengo.Memory;
 
 
 public class DataFetcher {
