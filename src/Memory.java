@@ -9,7 +9,7 @@ public class Memory {
 		// number of words is  bytes/4 (one word is one integer = 4bytes) 
 		// number of entries kb * 2 ^ 8
 		
-		int numEntries = (int) (size * Math.pow(2,8));
+		int numEntries = size * (1 << 8);
 		array = new int[numEntries];
 	}
 	

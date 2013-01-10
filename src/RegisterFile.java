@@ -3,6 +3,7 @@ import java.util.HashMap;
 
 public class RegisterFile {
 	HashMap<String, Integer> map;
+	public int PC;
 	
 	public Integer getRegisterValue(String regName) {
 		return map.get(regName);
