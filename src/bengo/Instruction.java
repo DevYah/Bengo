@@ -1,4 +1,4 @@
-package Bengo;
+package bengo;
 
 public class Instruction {
 	

@@ -1,4 +1,4 @@
-package Bengo;
+package bengo;
 import java.util.HashMap;
 import java.util.Map;
 

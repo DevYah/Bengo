@@ -1,4 +1,4 @@
-package Bengo;
+package bengo;
 
 public class Memory {
 	int size; // in KB
