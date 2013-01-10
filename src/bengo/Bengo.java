@@ -6,6 +6,8 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 
+import bengo.data_fetcher.Memory;
+
 
 public class Bengo {
 	
@@ -28,8 +30,18 @@ public class Bengo {
 	ArrayList<Instruction> instructs;
 	ReservationStation[] reservationStations;
 	
+	ArrayList<Integer> fetchedInstructions;
+	ArrayList<Integer> issuedInstructions;
+	
+	
 	public Bengo()
 	{
+		 PC = 0;
+		 fetchPC = 0;
+		 issuePC = -1;
+		 execPC = -1;
+		 this.fetchedInstructions = new ArrayList<Integer>();
+		 this.issuedInstructions = new ArrayList<Integer>();
 		 this.reservationStations = new ReservationStation[loadStations + addStations + multStations];
 		 for(int i = 0; i <= loadStations; i++)
 		 {
@@ -66,8 +78,27 @@ public class Bengo {
 		 {
 			 e.printStackTrace();
 		 }
-			
-			
+		 
+		 this.run();
+		
+	}
+	public void run()
+	{
+		this.fetch();
+		this.issue();
+		this.assingStation();
+		CURRENT_CYCLE++;
+	}
+	public void fetch()
+	{
+		
+	}
+	public void issue()
+	{
+		
+	}
+	public void assingStation()
+	{
 		
 	}
 	public static void main(String[] abbas) {
