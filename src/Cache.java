@@ -68,6 +68,7 @@ public class Cache {
 	      return map[TIO[1]][TIO[2] >> 2]; // shift offset by 2
 				                           // word-addressable
 	    }else { // miss
+	    	// should be handled in the DataFetcher
 	      return null;
 	    }
 	}
