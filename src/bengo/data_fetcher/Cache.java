@@ -2,7 +2,6 @@ package bengo.data_fetcher;
 public class Cache {
 	
 	int size; // in KB
-	int wordsPerLine; // in words
 	int associativity;
 	int hitPolicy; // 0 for write through, 1 for write back
 	int missPolicy; // 0 for write allocate, 1 for write around
@@ -14,14 +13,15 @@ public class Cache {
 	int[] dirtyBits;
 	int[] tags;
 	
-	public Cache(int size, int wordsPerLine, int hitTime,
-			     int penalty, int assoc, int hitPolicy) {
+	// deprecated
+	private final int wordsPerLine = 1; // in words
+	public Cache(int size, int hitTime, int penalty,
+				int assoc, int hitPolicy) {
 		this.size 			= size;
 		this.hitTime 		= hitTime;
 		this.associativity 	= assoc;
 		this.penalty 		= penalty;
 		this.hitPolicy 		= hitPolicy;
-		this.wordsPerLine 	= wordsPerLine;
 		
 		numLines 	= size/(wordsPerLine * 4);
 		map 		= new int[numLines][wordsPerLine];
