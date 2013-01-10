@@ -2,8 +2,7 @@
 public class Bengo {
 	
 	public static int CURRENT_CYCLE;
-	public int PC; 
-	
+	static Memory memory; 
 	// 	ROB, Reservation Station, Instruction, Cache & Memory
 	Instruction[] instructs;
 	public static void main(String[] abbas) {

@@ -35,7 +35,7 @@ public class Cache {
 	public static int makeNOnes(int n) {
 		int res = 0;
 		for (int i = 0; i < n; i++) {
-			res += 2 << i;
+			res += (1 << i);
 		}
 		return res;
 	}
