@@ -51,7 +51,8 @@ public class Cache {
 		
 		int offset = address & makeNOnes(log2(wordsPerLine));
 		offset <<= 2;
-		int index 	= address & (makeNOnes(log2(numLines/associativity)) << log2(wordsPerLine));
+		int index 	= address &
+				(makeNOnes(log2(numLines/associativity)) << log2(wordsPerLine));
 		index = index >> log2(wordsPerLine);
 		
 		int tag = address >> ((log2(wordsPerLine) + log2(numLines/associativity)));
@@ -65,7 +66,8 @@ public class Cache {
 	    int[] TIO = map(address);
 	    // handle hit, miss
 	    if(tags[TIO[1]] == TIO[0]) { // hit
-	      return map[TIO[1]][TIO[2] >> 2]; // shift offset by 2
+      	  // FIXME, apply access time
+	      return map[TIO[1]][TIO[2] >> 2]; // shift offset by 2 because it is
 				                           // word-addressable
 	    }else { // miss
 	    	// should be handled in the DataFetcher
@@ -83,7 +85,7 @@ public class Cache {
 		if (tags[TIO[1]] == TIO[0]) { // hit
 			if (hitPolicy == 0) { // write through
 				// TODO Write buffer
-				map[TIO[1]][TIO[2]] = value;
+				map[TIO[1]][TIO[2]] = value; // FIXME, apply access time
 
 			} else { // write-back
 
