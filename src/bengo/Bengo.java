@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 
+import bengo.data_fetcher.InstructionFetcher;
 import bengo.data_fetcher.Memory;
 
 
@@ -33,9 +34,12 @@ public class Bengo {
 	ArrayList<Integer> fetchedInstructions;
 	ArrayList<Integer> issuedInstructions;
 	
+	InstructionFetcher instructionFetcher;
+	
 	
 	public Bengo()
 	{
+		 this.instructionFetcher = new InstructionFetcher();
 		 PC = 0;
 		 fetchPC = 0;
 		 issuePC = -1;
@@ -45,15 +49,15 @@ public class Bengo {
 		 this.reservationStations = new ReservationStation[loadStations + addStations + multStations];
 		 for(int i = 0; i <= loadStations; i++)
 		 {
-			 reservationStations[i] = new ReservationStation("Load "+ (i + 1));
+			 reservationStations[i] = new ReservationStation("LOAD "+ (i + 1));
 		 }
 		 for(int i = 0; i <= addStations; i++)
 		 {
-			 reservationStations[i] = new ReservationStation("Add "+ (i + 1));
+			 reservationStations[i] = new ReservationStation("ADD "+ (i + 1));
 		 }
 		 for(int i = 0; i <= multStations; i++)
 		 {
-			 reservationStations[i] = new ReservationStation("Mult "+ (i + 1));
+			 reservationStations[i] = new ReservationStation("MULT "+ (i + 1));
 		 }
 		 this.instructs = new ArrayList<Instruction>();
 		// read the instructions
@@ -86,18 +90,31 @@ public class Bengo {
 	{
 		this.fetch();
 		this.issue();
-		this.assingStation();
+		this.execute();
 		CURRENT_CYCLE++;
 	}
 	public void fetch()
 	{
-		
+		this.instructionFetcher.fetch(fetchPC);
+		fetchPC++;
 	}
 	public void issue()
 	{
-		
+		if(issuePC >= 0)
+		{
+				for(int i = 0; i < reservationStations.length; i++)
+				{
+					if((!reservationStations[i].isBusy()) && (reservationStations[i].isCompatible(instructs.get(issuePC).getType())))
+					{
+						//TODO CHECK REGISTER STATUS
+						reservationStations[i].assignInstruction(instructs.get(issuePC));
+						this.issuedInstructions.add(issuePC);
+					}
+				}
+			
+		}
 	}
-	public void assingStation()
+	public void execute()
 	{
 		
 	}

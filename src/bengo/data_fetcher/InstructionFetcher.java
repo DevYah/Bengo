@@ -15,6 +15,11 @@ public class InstructionFetcher {
 	ArrayList<Instruction> instructions; 
 	int instructionHit;
 	
+	public InstructionFetcher()
+	{
+		
+	}
+	
 	public InstructionFetcher(int levels,
 						int size1, 		int size2, 		int size3,
 						int lineSize1, 	int lineSize2,	int lineSize3,
@@ -39,17 +44,17 @@ public class InstructionFetcher {
 	}
 	
 	
-	public FetchAction fetch(int address) {
+	public int[] fetch(int address) {
 		int neededCycles = 0;
 		for(int i = 0; i < levels; i++) {
 			Integer res = caches[i].read(address);
 			neededCycles += caches[i].hitTime; // in case of hit or miss
 			if (res != null) { // in case of hit
-				return new FetchAction(address, Bengo.CURRENT_CYCLE, neededCycles);
+				return new int[]{neededCycles,res};
 			}
 		}
 		neededCycles += 100; // FIXME what if the instruction was not in the cache
-		return new FetchAction(address, Bengo.CURRENT_CYCLE, neededCycles);
+		return new int[]{neededCycles,0};
 	}
 
 }

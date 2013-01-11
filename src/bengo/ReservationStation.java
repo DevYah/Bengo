@@ -17,6 +17,10 @@ public class ReservationStation {
 	{
 		this.name = name;
 	}
+	public boolean isCompatible(String instructionType)
+	{
+		return this.name.contains(instructionType);
+	}
 	
 	public void setOperation(String operation)
 	{
@@ -57,5 +61,8 @@ public class ReservationStation {
 	
 	public String getVj() {
 		return vj;
+	}
+	public boolean isBusy() {
+		return this.busy;
 	}
 }
