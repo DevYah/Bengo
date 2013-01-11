@@ -70,7 +70,9 @@ public class Cache {
 	public Integer read(int address) {
 	    // TIO = {Tag, Index, Offset}
 	    int[] TIO = map(address);
-	    return null;
+	    
+    	Integer res = cacheGroups[TIO[1]].read(address, TIO[0], TIO[2]);
+		return res;
 	    
 	}
 	
