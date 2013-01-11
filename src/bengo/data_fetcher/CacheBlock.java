@@ -8,8 +8,19 @@ public class CacheBlock {
 	boolean empty;
 	
 	public CacheBlock(int blockSize) {
-		if (empty)
-			this.data = new int[blockSize];
-		
+		tag  = -1;
+		data = new int[blockSize];
+		empty = true;
+	}
+	
+	public String toString() {
+		String s = "<";
+		s += tag; 
+		for (int d : data)
+			s += d + ",";
+			
+		s += ">";
+		return s;
+			
 	}
 }

@@ -26,7 +26,6 @@ public class Bengo {
 	int multTime;
 	int divideTime;
 	
-	static Memory memory; 
 	// 	ROB, Reservation Station, Instruction, Cache & Memory
 	ArrayList<Instruction> instructs;
 	ReservationStation[] reservationStations;

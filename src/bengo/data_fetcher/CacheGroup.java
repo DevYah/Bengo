@@ -7,8 +7,8 @@ public class CacheGroup {
 	public CacheGroup(int assoc, int blockSize) {
 		blocks = new CacheBlock[assoc];
 		
-		for(CacheBlock b : blocks)
-			b = new CacheBlock(blockSize);
+		for(int i = 0; i < blocks.length; i++)
+			 blocks[i]= new CacheBlock(blockSize);
 	}
 	
 	public Integer read(int address, int tag, int offset) {
@@ -18,5 +18,13 @@ public class CacheGroup {
 			}
 		}
 		return null;
+	}
+	public String toString() {
+		String s = "";
+		for (CacheBlock b : blocks) {
+			s += b.toString();
+			s += ",";
+		}
+		return s;	
 	}
 }

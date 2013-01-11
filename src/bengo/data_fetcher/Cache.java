@@ -1,8 +1,11 @@
 package bengo.data_fetcher;
+
+import java.util.Arrays;
+
 public class Cache {
 	
 	// Input 
-	int size; // in KB
+	int numWords;
 	int blockSize; // in words
 	int associativity;
 	int hitPolicy; // 0 for write through, 1 for write back
@@ -15,20 +18,24 @@ public class Cache {
 	int[] dirtyBits;
 	int[] tags;
 	
-	public Cache(int size,  int blockSize, int hitTime,
+	public Cache(int numWords,  int blockSize, int hitTime,
 				int assoc, int hitPolicy, int missPolicy) {
-		this.size 			= size;
+		this.numWords 		= numWords;
 		this.blockSize 		= blockSize;
 		this.hitTime 		= hitTime;
 		this.associativity 	= assoc;
 		this.hitPolicy 		= hitPolicy;
 		
-		numGroups 	= size/(associativity * blockSize * 4);
-		cacheGroups 		= new CacheGroup[numGroups];
+		numGroups 	= numWords/(associativity);
+		cacheGroups = new CacheGroup[numGroups];
+		
+		for (int i = 0; i < cacheGroups.length; i++)
+			cacheGroups[i] = new CacheGroup(associativity, blockSize);
+		
+		
+		System.out.println("numWords " + numWords);
+		System.out.println("numGroups " + numWords);
 
-		for (CacheGroup g : cacheGroups) 
-			g = new CacheGroup(associativity, blockSize);
-			
 		dirtyBits 	= new int[numGroups * associativity];
 		tags 		= new int[numGroups * associativity];
 	}
@@ -51,7 +58,7 @@ public class Cache {
 	}
 	
 	// returns array = {tag, index, offset}
-	private int[] map(int address) {
+	public int[] map(int address) {
 		// TESTED AND  WORKING (all sheet examples were tests)
 		
 		int offset = address & makeNOnes(log2(blockSize));
@@ -72,6 +79,7 @@ public class Cache {
 	    int[] TIO = map(address);
 	    
     	Integer res = cacheGroups[TIO[1]].read(address, TIO[0], TIO[2]);
+    	System.out.println(res);
 		return res;
 	    
 	}
@@ -110,8 +118,16 @@ public class Cache {
 	// TODO Auto-generated method stub
 		
 	}
-
-	public static void main(String[] args) {
-	}
 	
+	public String toString() {
+		String s = "";
+		for (int i = 0; i < cacheGroups.length; i++) {
+			s += "index: " + i + ":";
+			s += cacheGroups[i];
+			s += "\n";
+		}
+		return s;
+			
+	}
+
 }

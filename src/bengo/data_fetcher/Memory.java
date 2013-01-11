@@ -1,24 +1,25 @@
 package bengo.data_fetcher;
 
+import java.util.HashMap;
+
 public class Memory {
-	int size; // in KB
 	public int hitTime;
-	int[] array;
+	HashMap<Integer, Integer> map;
 	
-	public Memory(int size, int hitTime) {
+	public Memory(int hitTime) {
 		// number of bytes kb * 2^10
 		// number of words is  bytes/4 (one word is one integer = 4bytes) 
 		// number of entries kb * 2 ^ 8
 		
-		int numEntries = size * (1 << 8);
-		array = new int[numEntries];
+		map = new HashMap<Integer, Integer>();
+		this.hitTime = hitTime;
 	}
 	
 	public Integer read(int address) {
-		return array[address];
+		return map.get(address);
 	}
 	
-	public Integer write(int address, int value) {
-		return array[address] = value;
+	public void write(int address, int value) {
+		map.put(address, value);
 	}
 }

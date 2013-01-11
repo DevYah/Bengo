@@ -9,10 +9,12 @@ public class FetchAction {
 	
 	int data;
 	
-	public FetchAction(int address, int startCycle, int neededCycles) {
+	public FetchAction(int address, int startCycle, int neededCycles, int data) {
 		this.startCycle = startCycle;
 		this.neededCyles = neededCycles;
 		this.address = address;
+		
+		this.data = data;
 		
 	}
 	
@@ -41,5 +43,12 @@ public class FetchAction {
 			System.err.println("Data is not ready yet");
 			return (Integer) null;
 		}
+	}
+	
+	public String toString() {
+		String s = "address " + address;
+		s += "neededCcyles " + neededCyles ;
+		s += "data " + data;
+		return s;
 	}
 }
