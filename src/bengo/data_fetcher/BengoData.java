@@ -29,17 +29,22 @@ public class BengoData {
 			caches[2] = new Cache(sizes[2], lineSizes[2], hitTimes[2], assocs[2], hitPolicies[2], missPolicies[2]);
 	}
 	
-	public FetchAction fetch(int address) {
+	public DataAction fetch(int address) {
 		int neededCycles = 0;
 		for(int i = 0; i < levels; i++) {
 			Integer res = caches[i].read(address);
 			neededCycles += caches[i].hitTime; // in case of hit or miss
 			if (res != null) { // in case of hit
-				return new FetchAction(address, Bengo.CURRENT_CYCLE, neededCycles, res);
+				return new DataAction(address, Bengo.CURRENT_CYCLE, neededCycles, res);
 			}
 		}
 		neededCycles += mem.hitTime;
-		return new FetchAction(address, Bengo.CURRENT_CYCLE, neededCycles, mem.read(address));
+		return new DataAction(address, Bengo.CURRENT_CYCLE, neededCycles, mem.read(address));
+	}
+	
+	public WriteAction write(int address, int value) {
+		// TODO 
+		return null;
 	}
 	
 	public static void main(String[] args) {
