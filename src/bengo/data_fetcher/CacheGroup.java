@@ -10,4 +10,9 @@ public class CacheGroup {
 		for(CacheBlock b : blocks)
 			b = new CacheBlock(blockSize);
 	}
+	
+	public Integer read(int address) {
+		// TODO loop on blocks, return null if not found
+		return null;
+	}
 }

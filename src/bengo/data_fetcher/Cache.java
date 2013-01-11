@@ -11,7 +11,7 @@ public class Cache {
 	
 	// Calculated
 	int numGroups;
-	CacheGroup[] map;
+	CacheGroup[] cacheGroups;
 	int[] dirtyBits;
 	int[] tags;
 	
@@ -24,9 +24,9 @@ public class Cache {
 		this.hitPolicy 		= hitPolicy;
 		
 		numGroups 	= size/(associativity * blockSize * 4);
-		map 		= new CacheGroup[numGroups];
+		cacheGroups 		= new CacheGroup[numGroups];
 
-		for (CacheGroup g : map) 
+		for (CacheGroup g : cacheGroups) 
 			g = new CacheGroup(associativity, blockSize);
 			
 		dirtyBits 	= new int[numGroups * associativity];
@@ -70,19 +70,14 @@ public class Cache {
 	public Integer read(int address) {
 	    // TIO = {Tag, Index, Offset}
 	    int[] TIO = map(address);
-	    // TODO handle hit, miss
-	    return hit(address); // if miss, hit(address) will return null. DataFetcher will
-							 // handle the penalty and will return FetchAction
+	    return null;
+	    
 	}
 	
 	public void write(int address, int value) {
-		// On data-write hit, could just update the block in cache
-		// But then cache and memory would be inconsistent
-		// Write through: also update memory
-		// Solution: write buffer Lecture 4, slide 8
 
 		int[] TIO = map(address);
-		if (hit(address) != null) { // hit
+		if (read(address) != null) { // hit
 			if (hitPolicy == 0) { // write through
 				writeThrough(address, value);
 			} else { // write-back
@@ -100,18 +95,17 @@ public class Cache {
 
 	}
 	
-	public Integer hit(int address) {
-		// TODO 
-		return null;
-	}
-	
 	private void writeBack(int address, int value) {
 		// TODO Auto-generated method stub
 		
 	}
 
 	private void writeThrough(int address, int value) {
-		// TODO Auto-generated method stub
+	// On data-write hit, could just update the block in cache
+	// But then cache and memory would be inconsistent
+	// Write through: also update memory
+	// Solution: write buffer. Lecture 4, slide 8
+	// TODO Auto-generated method stub
 		
 	}
 
