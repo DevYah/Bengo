@@ -2,14 +2,13 @@ package bengo.data_fetcher;
 
 import bengo.Bengo;
 
-public class FetchAction {
+public class WriteAction {
 	int startCycle;
 	int neededCyles;
 	int address; // memory address
-	
 	int data;
 	
-	public FetchAction(int address, int startCycle, int neededCycles) {
+	public WriteAction(int address, int startCycle, int neededCycles, int data) {
 		this.startCycle = startCycle;
 		this.neededCyles = neededCycles;
 		this.address = address;
@@ -31,15 +30,5 @@ public class FetchAction {
 	
 	public int getRemaingCycles() {
 		return Bengo.CURRENT_CYCLE - startCycle - neededCyles;
-	}
-	
-	public int getData() {
-		if (isReady()) {
-			return data;
-		}
-		else {
-			System.err.println("Data is not ready yet");
-			return (Integer) null;
-		}
 	}
 }

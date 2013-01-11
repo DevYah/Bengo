@@ -1,32 +1,36 @@
 package bengo.data_fetcher;
 public class Cache {
 	
+	// Input 
 	int size; // in KB
+	int blockSize; // in words
 	int associativity;
 	int hitPolicy; // 0 for write through, 1 for write back
 	int missPolicy; // 0 for write allocate, 1 for write around
 	int hitTime;
-	int penalty;
 	
-	int numLines;
-	int[][] map;
+	// Calculated
+	int numGroups;
+	CacheGroup[] map;
 	int[] dirtyBits;
 	int[] tags;
 	
-	// deprecated
-	private final int wordsPerLine = 1; // in words
-	public Cache(int size, int hitTime, int penalty,
-				int assoc, int hitPolicy) {
+	public Cache(int size,  int blockSize, int hitTime,
+				int assoc, int hitPolicy, int missPolicy) {
 		this.size 			= size;
+		this.blockSize 		= blockSize;
 		this.hitTime 		= hitTime;
 		this.associativity 	= assoc;
-		this.penalty 		= penalty;
 		this.hitPolicy 		= hitPolicy;
 		
-		numLines 	= size/(wordsPerLine * 4);
-		map 		= new int[numLines][wordsPerLine];
-		dirtyBits 	= new int[numLines];
-		tags 		= new int[numLines];
+		numGroups 	= size/(associativity * blockSize * 4);
+		map 		= new CacheGroup[numGroups];
+
+		for (CacheGroup g : map) 
+			g = new CacheGroup(associativity, blockSize);
+			
+		dirtyBits 	= new int[numGroups * associativity];
+		tags 		= new int[numGroups * associativity];
 	}
 	
 	/*
@@ -34,7 +38,7 @@ public class Cache {
 	 * consecutive ones. Example, n = 3 will return 0b111 = 7 
 	 * 
 	 */
-	public static int makeNOnes(int n) {
+	private static int makeNOnes(int n) {
 		int res = 0;
 		for (int i = 0; i < n; i++) {
 			res += (1 << i);
@@ -42,54 +46,47 @@ public class Cache {
 		return res;
 	}
 	
-	public static int log2(int n) {
+	private static int log2(int n) {
 		return (int) (Math.log10(n)/Math.log10(2));
 	}
 	
 	// returns array = {tag, index, offset}
-	public int[] map(int address) {
+	private int[] map(int address) {
 		// TESTED AND  WORKING (all sheet examples were tests)
 		
-		int offset = address & makeNOnes(log2(wordsPerLine));
+		int offset = address & makeNOnes(log2(blockSize));
 		offset <<= 2;
 		int index 	= address &
-				(makeNOnes(log2(numLines/associativity)) << log2(wordsPerLine));
-		index = index >> log2(wordsPerLine);
+				(makeNOnes(log2(numGroups/associativity)) << log2(blockSize));
+		index = index >> log2(blockSize);
 		
-		int tag = address >> ((log2(wordsPerLine) + log2(numLines/associativity)));
+		int tag = address >> ((log2(blockSize) + log2(numGroups/associativity)));
 		
 //		System.out.println(tag + " " + index + " " + offset);
 		return new int[] {tag, index, offset};
 	}
 	
-	public Integer read(Integer address) {
+	
+	public Integer read(int address) {
 	    // TIO = {Tag, Index, Offset}
 	    int[] TIO = map(address);
-	    // handle hit, miss
-	    if(tags[TIO[1]] == TIO[0]) { // hit
-      	  // FIXME, apply access time
-	      return map[TIO[1]][TIO[2] >> 2]; // shift offset by 2 because it is
-				                           // word-addressable
-	    }else { // miss
-	    	// should be handled in the DataFetcher
-	      return null;
-	    }
+	    // TODO handle hit, miss
+	    return hit(address); // if miss, hit(address) will return null. DataFetcher will
+							 // handle the penalty and will return FetchAction
 	}
 	
-	public void write(Integer address, Integer value) {
+	public void write(int address, int value) {
 		// On data-write hit, could just update the block in cache
 		// But then cache and memory would be inconsistent
 		// Write through: also update memory
 		// Solution: write buffer Lecture 4, slide 8
 
 		int[] TIO = map(address);
-		if (tags[TIO[1]] == TIO[0]) { // hit
+		if (hit(address) != null) { // hit
 			if (hitPolicy == 0) { // write through
-				// TODO Write buffer
-				map[TIO[1]][TIO[2]] = value; // FIXME, apply access time
-
+				writeThrough(address, value);
 			} else { // write-back
-
+				writeBack(address, value);
 			}
 		} else { // miss
 			// TODO miss policy
@@ -103,6 +100,21 @@ public class Cache {
 
 	}
 	
+	public Integer hit(int address) {
+		// TODO 
+		return null;
+	}
+	
+	private void writeBack(int address, int value) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	private void writeThrough(int address, int value) {
+		// TODO Auto-generated method stub
+		
+	}
+
 	public static void main(String[] args) {
 	}
 	
