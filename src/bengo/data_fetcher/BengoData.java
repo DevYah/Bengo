@@ -42,7 +42,7 @@ public class BengoData {
 		return new DataAction(address, Bengo.CURRENT_CYCLE, neededCycles, mem.read(address));
 	}
 	
-	public WriteAction write(int address, int value) {
+	public DataAction write(int address, int value) {
 		// TODO 
 		return null;
 	}

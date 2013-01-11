@@ -12,6 +12,10 @@ public class CacheBlock {
 		data = new int[blockSize];
 		empty = true;
 	}
+	public boolean isEmpty()
+	{
+		return this.empty;
+	}
 	
 	public String toString() {
 		String s = "<";

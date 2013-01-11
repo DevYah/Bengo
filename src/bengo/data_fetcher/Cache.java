@@ -85,30 +85,12 @@ public class Cache {
 	}
 	
 	public void write(int address, int value) {
-
 		int[] TIO = map(address);
-		if (read(address) != null) { // hit
-			if (hitPolicy == 0) { // write through
-				writeThrough(address, value);
-			} else { // write-back
-				writeBack(address, value);
-			}
-		} else { // miss
-			// TODO miss policy
-			if (missPolicy == 0) { // write allocate
-
-			} else { // write around
-
-			}
-
-		}
+		
+		cacheGroups[TIO[1]].write(TIO, value);
 
 	}
 	
-	private void writeBack(int address, int value) {
-		// TODO Auto-generated method stub
-		
-	}
 
 	private void writeThrough(int address, int value) {
 	// On data-write hit, could just update the block in cache

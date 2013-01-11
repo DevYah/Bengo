@@ -3,7 +3,7 @@ package bengo.data_fetcher;
 public class CacheGroup {
 
 	private CacheBlock[] blocks;
-	
+		
 	public CacheGroup(int assoc, int blockSize) {
 		blocks = new CacheBlock[assoc];
 		
@@ -18,6 +18,18 @@ public class CacheGroup {
 			}
 		}
 		return null;
+	}
+	
+	public void Write(int[] TIO, int value, boolean hit, int policy) {
+		// search for an empty slot. use a replacement algorithm otherwise
+		for (int i = 0; i < blocks.length; i++)
+		{
+			if(blocks[i].isEmpty())
+			{
+				// assign cache block to data
+			}
+		}
+		
 	}
 	public String toString() {
 		String s = "";
