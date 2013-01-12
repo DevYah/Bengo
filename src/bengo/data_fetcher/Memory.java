@@ -2,7 +2,7 @@ package bengo.data_fetcher;
 
 import java.util.HashMap;
 
-public class Memory {
+class Memory {
 	public int hitTime;
 	HashMap<Integer, Integer> map;
 	

@@ -6,7 +6,6 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 
-import bengo.data_fetcher.Memory;
 import bengo.instruction_fetcher.InstructionFetcher;
 
 
@@ -26,7 +25,6 @@ public class Bengo {
 	int multTime;
 	int divideTime;
 	
-	static Memory memory; 
 	// 	ROB, Reservation Station, Instruction, Cache & Memory
 	ArrayList<Instruction> instructs;
 	ReservationStation[] reservationStations;

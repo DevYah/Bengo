@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 import bengo.Instruction;
 
-public class InstructionCache {
+class InstructionCache {
 	
 	int levels;
 	

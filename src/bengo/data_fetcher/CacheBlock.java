@@ -1,6 +1,6 @@
 package bengo.data_fetcher;
 
-public class CacheBlock {
+class CacheBlock {
 
 	int blockSize; // in words
 	int tag;

@@ -2,7 +2,7 @@ package bengo.instruction_fetcher;
 
 import bengo.Instruction;
 
-public class InstructionCacheLine {
+class InstructionCacheLine {
 	
 	int instructionsPerLine;
 	Instruction[] instructions;

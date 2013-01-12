@@ -1,6 +1,6 @@
 package bengo.data_fetcher;
 
-public class CacheGroup {
+class CacheGroup {
 
 	private CacheBlock[] blocks;
 		

@@ -2,7 +2,7 @@ package bengo.data_fetcher;
 
 import bengo.Bengo;
 
-public class DataAction {
+class DataAction {
 	int startCycle;
 	int neededCyles;
 	int address; // memory address

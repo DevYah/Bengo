@@ -1,8 +1,6 @@
 package bengo.data_fetcher;
 
-import java.util.Arrays;
-
-public class Cache {
+class Cache {
 	
 	// Input 
 	int numWords;
