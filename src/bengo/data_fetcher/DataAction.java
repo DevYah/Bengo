@@ -22,7 +22,7 @@ class DataAction {
 		if (startCycle + neededCyles -1 == Bengo.CURRENT_CYCLE) {
 			return true;
 		}
-		if (startCycle + neededCyles -1 > Bengo.CURRENT_CYCLE) {
+		if (startCycle + neededCyles -1 < Bengo.CURRENT_CYCLE) {
 			System.err.println("somthing is wrong, this check is bad." +
 					" The fetch instructino of address " + address
 					+ " was ready at least one cycle before the check");
@@ -35,7 +35,7 @@ class DataAction {
 		return Bengo.CURRENT_CYCLE - startCycle - neededCyles;
 	}
 	
-	public int getData() {
+	public Integer getData() {
 		if (isReady()) {
 			return data;
 		}
@@ -50,5 +50,15 @@ class DataAction {
 		s += "neededCcyles " + neededCyles ;
 		s += "data " + data;
 		return s;
+	}
+	
+	public static void main(String[] args) {
+		DataAction d = new DataAction(123, 0, 2, 1213);
+		if (d.getData() != null)
+			System.out.println(d.getData());
+		Bengo.CURRENT_CYCLE ++;
+		if (d.getData() != null)
+			System.out.println(d.getData());
+		Bengo.CURRENT_CYCLE ++;
 	}
 }
