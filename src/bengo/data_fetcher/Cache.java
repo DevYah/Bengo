@@ -52,7 +52,7 @@ class Cache {
 	}
 	
 	private static int log2(int n) {
-		return (int) (Math.log10(n)/Math.log10(2));
+		return (int) Math.ceil(Math.log10(n)/Math.log10(2));
 	}
 	
 	// returns array = {tag, index, offset}
