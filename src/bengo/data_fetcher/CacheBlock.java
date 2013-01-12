@@ -22,25 +22,22 @@ class CacheBlock {
 		return this.empty;
 	}
 	
-	public void write(int[] newData, int tag) {
-		this.tag = tag;
-		this.data = makeCompatible(newData);
-		lastUpdated = Bengo.CURRENT_CYCLE;
-		empty = false;
+	public void write(int[] newData, int tag){
+		try {
+	//		this.data = makeCompatible(newData);
+			if (newData.length != this.blockSize)
+				throw new Exception("Incompatible blockSize");
+			else
+				this.data = newData;
+			
+			this.tag = tag;
+			lastUpdated = Bengo.CURRENT_CYCLE;
+			empty = false;
+		} catch (Exception e) {
+			e.printStackTrace();
+			System.exit(0);
+		}
 		
-	}
-	
-	// in case of data has lower number of words than this cacheBlock size
-	private int[] makeCompatible(int[] newData) {
-		if (newData.length == blockSize)
-			return newData;
-		
-		int[] comptaible = new int[blockSize];
-		// copy data from newData to comptible
-		for (int i = 0; i < newData.length; i++)
-			comptaible[i] = newData[i];
-		
-		return comptaible;
 	}
 
 	public String toString() {
