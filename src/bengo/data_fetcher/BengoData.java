@@ -32,17 +32,17 @@ public class BengoData {
 	public DataAction fetch(int address) {
 		int neededCycles = 0;
 		int[] res;
-		int wrodOffset;
+		int wordOffset;
 		int i;
 		boolean foundInCache = false;
 		int value = -11111111;
 		for(i = 0; i < levels; i++) {
 			res = caches[i].read(address);
-			wrodOffset = caches[i].map(address)[2] >> 2;
+			wordOffset = caches[i].map(address)[2] >> 2;
 			neededCycles += caches[i].hitTime; // in case of hit or miss
 			if (res != null) { // in case of hit
 				foundInCache = true;
-				value = res[wrodOffset];
+				value = res[wordOffset];
 				break;
 			}
 		}
@@ -55,9 +55,13 @@ public class BengoData {
 		// write in the caches where the data doesn't exist
 		// assume no 
 		for (int j = i-1; j >= 0; j--) {
-			wrodOffset = caches[j].map(address)[2] >> 2;
+			wordOffset = caches[j].map(address)[2] >> 2;
 			int[] block = new int[caches[j].blockSize];
-			block[wrodOffset] = value;
+			int baseAddress = address - wordOffset;
+			for (int k = 0; k < caches[j].blockSize; k++) {
+				block[k] = mem.read(baseAddress + k);
+			}
+			block[wordOffset] = value;
 			write(j, address, block, true);
 		}
 		
@@ -91,6 +95,7 @@ public class BengoData {
 		mem.write(0, 99);
 		mem.write(1, 98);
 		mem.write(7, 97);
+		mem.write(6, 96);
 		d.mem = mem;
 		
 //		System.out.println("caches[0] " + d.caches[0]);
@@ -98,12 +103,13 @@ public class BengoData {
 		System.out.println(d.caches[0]);
 		System.out.println("-------------------------");
 		System.out.println(d.caches[1]);
+		
+		
 		System.out.println(d.fetch(7));
 		
 	}
 	
 	public static void main(String[] args) {
 		test();
-		
 	}
 }
