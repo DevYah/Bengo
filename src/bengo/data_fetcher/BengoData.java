@@ -53,17 +53,20 @@ public class BengoData {
 		// write in the caches where the data doesn't exist
 		// assume no 
 		for (int j = i-1; j >= 0; j--) {
-			wordOffset = caches[j].map(address)[2] >> 2;
-			int[] block = new int[caches[j].blockSize];
-			int baseAddress = address - wordOffset;
-			for (int k = 0; k < caches[j].blockSize; k++) {
-				block[k] = mem.read(baseAddress + k);
-			}
-			block[wordOffset] = value;
+			int[] block = compatibleBlock(address, j);
 			write(j, address, block, true);
 		}
-		
 		return new DataAction(address, Bengo.CURRENT_CYCLE, neededCycles, value);
+	}
+	
+	public int[] compatibleBlock(int address, int cacheIndex) {
+		int wordOffset = caches[cacheIndex].map(address)[2] >> 2;
+		int[] block = new int[caches[cacheIndex].blockSize];
+		int baseAddress = address - wordOffset;
+		for (int k = 0; k < caches[cacheIndex].blockSize; k++) {
+			block[k] = mem.read(baseAddress + k);
+		}
+		return block;
 	}
 	
 	// instant, no penalty calculations
