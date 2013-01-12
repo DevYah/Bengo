@@ -28,7 +28,6 @@ class CacheGroup {
 			if(blocks[i].isEmpty())
 			{
 				// assign cache block to data
-				System.out.println("block to write in is " + blocks[i].blockSize);
 				blocks[i].write(value, TIO[0]);
 				break;
 			}
