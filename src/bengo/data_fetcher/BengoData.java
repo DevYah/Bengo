@@ -44,7 +44,7 @@ public class BengoData {
 		return null;
 	}
 	
-	public static void main(String[] args) {
+	public static void test() {
 		int levels = 1;
 		int[] numWords = {12};
 		int[] lineSizes =  {1};

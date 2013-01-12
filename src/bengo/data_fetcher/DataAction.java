@@ -52,7 +52,7 @@ class DataAction {
 		return s;
 	}
 	
-	public static void main(String[] args) {
+	public static void test() {
 		DataAction d = new DataAction(123, 0, 2, 1213);
 		if (d.getData() != null)
 			System.out.println(d.getData());
