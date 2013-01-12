@@ -6,8 +6,8 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 
-import bengo.data_fetcher.InstructionFetcher;
 import bengo.data_fetcher.Memory;
+import bengo.instruction_fetcher.InstructionFetcher;
 
 
 public class Bengo {
@@ -26,6 +26,7 @@ public class Bengo {
 	int multTime;
 	int divideTime;
 	
+	static Memory memory; 
 	// 	ROB, Reservation Station, Instruction, Cache & Memory
 	ArrayList<Instruction> instructs;
 	ReservationStation[] reservationStations;
@@ -38,7 +39,7 @@ public class Bengo {
 	
 	public Bengo()
 	{
-		 this.instructionFetcher = new InstructionFetcher();
+		 //this.instructionFetcher = new InstructionFetcher();
 		 PC = 0;
 		 fetchPC = 0;
 		 issuePC = -1;
@@ -64,12 +65,14 @@ public class Bengo {
 		 {
 			 BufferedReader instructionsReader = new BufferedReader(new FileReader("program.txt")); 
 			 String instructionStr;
+			 int instructionAddress = 0;
 				try
 				{
 					while((instructionStr = instructionsReader.readLine()) != null)
 					{
-						Instruction instructionObj = new Instruction(instructionStr.split(" "));
+						Instruction instructionObj = new Instruction(instructionStr.split(" "), instructionAddress);
 						this.instructs.add(instructionObj);
+						instructionAddress++;
 					}
 				}
 				catch(IOException e)
@@ -94,7 +97,7 @@ public class Bengo {
 	}
 	public void fetch()
 	{
-		this.instructionFetcher.fetch(fetchPC);
+		// TODO this.instructionFetcher.fetch(fetchPC);
 		fetchPC++;
 	}
 	public void issue()

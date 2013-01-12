@@ -87,7 +87,7 @@ public class Cache {
 	public void write(int address, int value) {
 		int[] TIO = map(address);
 		
-		cacheGroups[TIO[1]].write(TIO, value);
+	//	cacheGroups[TIO[1]].write(TIO, value);
 
 	}
 	

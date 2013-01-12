@@ -11,13 +11,14 @@ public class Instruction {
     ArrayList<String> loadInstructions;
     ArrayList<String> addInstructions;
     ArrayList<String> mulInstructions;
+    int address;
 //>>>>>>> memory
 	
 	public Instruction(int binary) {
 		// parser to get the type, rd, rs, rm
 	}
 	
-	public Instruction(String []instructionStr) {
+	public Instruction(String []instructionStr, int address) {
 		fields = new String[]{instructionStr.length >= 0 ? instructionStr[0] : null ,
 				instructionStr.length >= 1 ? instructionStr[1] : null,
 				instructionStr.length >= 2 ? instructionStr[2] : null,
@@ -33,6 +34,11 @@ public class Instruction {
 		this.fillAdd();
 		this.mulInstructions = new ArrayList<String>();
 		this.fillMul();
+		this.address = address;
+	}
+	public int getAddress()
+	{
+		return this.address;
 	}
 	public void fillLoad()
 	{
