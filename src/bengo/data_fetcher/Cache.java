@@ -77,14 +77,12 @@ class Cache {
 	    
     	int[] resBlock = cacheGroups[TIO[1]].readBlock(address, TIO[0]);
 		return resBlock;
-	    
 	}
 	
 	public void write(int address, int[] value) {
 		int[] TIO = map(address);
 		
 		cacheGroups[TIO[1]].write(TIO, value);
-
 	}
 	
 	public String toString() {
@@ -95,7 +93,6 @@ class Cache {
 			s += "\n";
 		}
 		return s;
-			
 	}
 
 }

@@ -51,15 +51,16 @@ public class BengoData {
 		}
 		
 		// write in the caches where the data doesn't exist
-		// assume no 
+		// assume no cycles to wait
 		for (int j = i-1; j >= 0; j--) {
 			int[] block = compatibleBlock(address, j);
-			write(j, address, block, true);
+//			write(j, address, block, true);
+			caches[j].write(address, block, true);
 		}
 		return new DataAction(address, Bengo.CURRENT_CYCLE, neededCycles, value);
 	}
 	
-	public int[] compatibleBlock(int address, int cacheIndex) {
+	private int[] compatibleBlock(int address, int cacheIndex) {
 		int wordOffset = caches[cacheIndex].map(address)[2] >> 2;
 		int[] block = new int[caches[cacheIndex].blockSize];
 		int baseAddress = address - wordOffset;
@@ -69,13 +70,52 @@ public class BengoData {
 		return block;
 	}
 	
+	private int[] compatibleBlock(int address, int wordToWrite, int cacheIndex) {
+		int[] blockToWrite = compatibleBlock(address, cacheIndex);
+		int offset = caches[0].map(address)[2] >> 2;
+		blockToWrite[offset] = wordToWrite;
+		return blockToWrite;
+	}
+	
 	// instant, no penalty calculations
-	public DataAction write(int cacheIndex, int address, int[] block, boolean instant) {
-		// TODO 
-		if (instant) {
-			caches[cacheIndex].write(address, block);
+	private DataAction write(int address, int word, boolean instant) {
+		// TODO  write policies
+		if (instant == true) {
+			mem.write(address, word);
+			return null;
+		}
+		
+		int neededCycles = 0;
+		if(caches[0].read(address) != null) {// hit 
+			if (caches[0].hitPolicy == 0) { // write through
+				writeThrough(0, address, word);
+			}else { // write back
+				writeBack(0, address, word);
+			}
+		}else {
+			if (caches[0].missPolicy == 0) { // write through
+				writeAround(0, address, word);
+			}else { // write back
+				writeAllocate(0, address, word);
+			}
 		}
 		return null;
+	}
+	
+	private DataAction writeThrough(int address, int word, int cacheIndex) {
+		int[] blockToWrite = compatibleBlock(address, word, cacheIndex);
+	}
+	
+	private DataAction writeBack(int address, int word, int cacheIndex) {
+		int[] blockToWrite = compatibleBlock(address, word, cacheIndex);
+	}
+	
+	private DataAction writeAround(int address, int word, int cacheIndex) {
+		int[] blockToWrite = compatibleBlock(address, word, cacheIndex);
+	}
+	
+	private DataAction writeAllocate(int address, int word, int cacheIndex) {
+		int[] blockToWrite = compatibleBlock(address, word, cacheIndex);
 	}
 	
 	public static void test() {
