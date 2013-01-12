@@ -47,8 +47,8 @@ class DataAction {
 	
 	public String toString() {
 		String s = "address " + address;
-		s += "neededCcyles " + neededCyles ;
-		s += "data " + data;
+		s += "  neededCcyles " + neededCyles ;
+		s += "  data " + data;
 		return s;
 	}
 	

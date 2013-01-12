@@ -61,8 +61,7 @@ class Cache {
 		
 		int offset = address & makeNOnes(log2(blockSize));
 		offset <<= 2;
-		int index 	= address &
-				(makeNOnes(log2(numGroups/associativity)) << log2(blockSize));
+		int index 	= address & ((makeNOnes(log2(numGroups))) << log2(blockSize));
 		index = index >> log2(blockSize);
 		
 		int tag = address >> ((log2(blockSize) + log2(numGroups/associativity)));
@@ -72,27 +71,26 @@ class Cache {
 	}
 	
 	
-	public Integer read(int address) {
+	public int[] read(int address) {
 	    // TIO = {Tag, Index, Offset}
 	    int[] TIO = map(address);
 	    
-    	Integer res = cacheGroups[TIO[1]].read(address, TIO[0], TIO[2]);
-    	System.out.println(res);
-		return res;
+    	int[] resBlock = cacheGroups[TIO[1]].readBlock(address, TIO[0]);
+		return resBlock;
 	    
 	}
 	
-	public void write(int address, int value) {
+	public void write(int address, int[] value) {
 		int[] TIO = map(address);
 		
-	//	cacheGroups[TIO[1]].write(TIO, value);
+		cacheGroups[TIO[1]].write(TIO, value);
 
 	}
 	
 	public String toString() {
 		String s = "";
 		for (int i = 0; i < cacheGroups.length; i++) {
-			s += "index: " + i + ":";
+			s += "index " + i + ":";
 			s += cacheGroups[i];
 			s += "\n";
 		}
