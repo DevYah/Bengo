@@ -24,7 +24,7 @@ class Cache {
 		this.associativity 	= assoc;
 		this.hitPolicy 		= hitPolicy;
 		
-		numGroups 	= numWords/(associativity);
+		numGroups 	= numWords/(associativity * blockSize);
 		cacheGroups = new CacheGroup[numGroups];
 		
 		for (int i = 0; i < cacheGroups.length; i++)
