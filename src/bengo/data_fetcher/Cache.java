@@ -64,7 +64,7 @@ class Cache {
 		int index 	= address & ((makeNOnes(log2(numGroups))) << log2(blockSize));
 		index = index >> log2(blockSize);
 		
-		int tag = address >> ((log2(blockSize) + log2(numGroups/associativity)));
+		int tag = address >> ((log2(blockSize) + log2(numGroups)));
 		
 //		System.out.println(tag + " " + index + " " + offset);
 		return new int[] {tag, index, offset};
