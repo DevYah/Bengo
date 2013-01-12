@@ -21,14 +21,14 @@ class CacheGroup {
 		return null;
 	}
 	
-	public void write(int[] TIO, int[] value) {
+	public void write(int[] TIO, int[] block) {
 		// search for an empty slot. use a replacement algorithm otherwise
 		for (int i = 0; i < blocks.length; i++)
 		{
 			if(blocks[i].isEmpty())
 			{
 				// assign cache block to data
-				blocks[i].write(value, TIO[0]);
+				blocks[i].write(block, TIO[0]);
 				break;
 			}
 		}

@@ -1,7 +1,5 @@
 package bengo.data_fetcher;
 
-import java.util.Arrays;
-
 import bengo.Bengo;
 
 public class BengoData {
@@ -91,7 +89,7 @@ public class BengoData {
 		System.out.println(d.caches[0]);
 		System.out.println("-------------------------");
 		System.out.println(d.caches[1]);
-		Memory mem = new Memory(20);
+		Memory mem = new Memory(50);
 		mem.write(0, 99);
 		mem.write(1, 98);
 		mem.write(7, 97);
@@ -106,6 +104,7 @@ public class BengoData {
 		
 		
 		System.out.println(d.fetch(7));
+		System.out.println(d.fetch(6));
 		
 	}
 	

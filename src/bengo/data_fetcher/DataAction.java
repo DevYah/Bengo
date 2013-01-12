@@ -7,14 +7,14 @@ class DataAction {
 	int neededCyles;
 	int address; // memory address
 	
-	int data;
+	int word;
 	
-	public DataAction(int address, int startCycle, int neededCycles, int data) {
+	public DataAction(int address, int startCycle, int neededCycles, int word) {
 		this.startCycle = startCycle;
 		this.neededCyles = neededCycles;
 		this.address = address;
 		
-		this.data = data;
+		this.word = word;
 		
 	}
 	
@@ -37,7 +37,7 @@ class DataAction {
 	
 	public Integer getData() {
 		if (isReady()) {
-			return data;
+			return word;
 		}
 		else {
 			System.err.println("Data is not ready yet");
@@ -48,7 +48,7 @@ class DataAction {
 	public String toString() {
 		String s = "address " + address;
 		s += "  neededCcyles " + neededCyles ;
-		s += "  data " + data;
+		s += "  data " + word;
 		return s;
 	}
 	
