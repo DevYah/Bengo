@@ -89,16 +89,6 @@ class Cache {
 
 	}
 	
-
-	private void writeThrough(int address, int value) {
-	// On data-write hit, could just update the block in cache
-	// But then cache and memory would be inconsistent
-	// Write through: also update memory
-	// Solution: write buffer. Lecture 4, slide 8
-	// TODO Auto-generated method stub
-		
-	}
-	
 	public String toString() {
 		String s = "";
 		for (int i = 0; i < cacheGroups.length; i++) {
