@@ -36,6 +36,14 @@ public class Instruction {
 		this.fillMul();
 		this.address = address;
 	}
+	public void setFetchTime(int fetchTime)
+	{
+		this.fetchTime = fetchTime;
+	}
+	public void setIssueTime(int issueTime)
+	{
+		this.issueTime = issueTime;
+	}
 	public int getAddress()
 	{
 		return this.address;
@@ -70,8 +78,8 @@ public class Instruction {
 	public void fillMul()
 // <<<<<<< master (Nada)
 	{
-		this.addInstructions.add("MUL");
-		this.addInstructions.add("DIV");
+		this.mulInstructions.add("MUL");
+		this.mulInstructions.add("DIV");
 	}
 	public void setStatus(String status)
 	{
@@ -81,9 +89,18 @@ public class Instruction {
 	{
 		return this.status;
 	}
+	public void setExecuteTime(int exec)
+	{
+		this.excuteTime = exec;
+	}
+	public void setWrittenTime(int time)
+	{
+		this.writeTime = time;
+	}
 	public String toString()
 	{
-		return fields[0] + " " + fields[1] + " " + fields[2] + " " + fields[3];
+		return fields[0] + " " + fields[1] + " " + fields[2] + " " + fields[3] + " WAS FETCHED AT " + this.fetchTime + " ISSUED AT " + this.issueTime + " Executed AT " + this.excuteTime 
+				+ " WRITTEN AT " + this.writeTime;
 	}
 // =======
 

@@ -17,10 +17,12 @@ public class RegisterStatus {
 	
 	public String getRegisterStation(String reg)
 	{
+		
 		return this.registerStations.get(reg);
 	}
 	public void assignRegister(String stationName, String reg)
 	{
+		System.err.println("assigning register station to" + reg + " with " + stationName);
 		this.registerStations.put(reg,stationName);
 	}
 	

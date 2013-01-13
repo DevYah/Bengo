@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 import bengo.Instruction;
 
-class InstructionCache {
+ class InstructionCache {
 	
 	int levels;
 	
@@ -23,7 +23,7 @@ class InstructionCache {
 		this.assoc = assoc;
 		this.lines = lines;
 		this.instructionsPerLine = instructionsPerLine;
-		this.cache = new InstructionCacheLine[lines/assoc][assoc];
+		this.cache = new InstructionCacheLine[(int)(Math.pow(2,log2(lines/assoc)))][assoc];
 		for(int i = 0; i < cache.length;i++)
 		{
 			for(int j = 0; j < cache[i].length; j++)
@@ -36,8 +36,9 @@ class InstructionCache {
 	
 	public Instruction read(int address)
 	{
-		System.out.println("reading " + address);
+		//System.out.println("reading " + address);
 		int[] TIO = map(address);
+		//System.out.println(TIO[1]);
 		Instruction instr;
 		for(int i = 0; i < cache[TIO[1]].length; i++)
 		{
@@ -61,9 +62,13 @@ class InstructionCache {
 		address = this.getAddressBase(address);
 		for(int i = 0; i < newBlock.length; i++)
 		{
-			newBlock[i] = this.instructs.get(address);
-			tags[i] = map(address)[0];
-			address++;
+			if(address < this.instructs.size())
+			{
+				newBlock[i] = this.instructs.get(address);
+				tags[i] = map(address)[0];
+				address++;
+			}
+	
 		}
 		
 		boolean written = false;
@@ -74,7 +79,7 @@ class InstructionCache {
 			{
 				
 				// found empty space, update cache
-				System.out.println("found empty space for address" + (address - 2));
+				//System.out.println("found empty space for address" + (address - 2));
 				written = true;
 				cache[TIO[1]][i].writeInstruction(newBlock, tags);
 				break;
@@ -83,7 +88,7 @@ class InstructionCache {
 		if(!written)
 		{
 			// remove random block.
-			System.out.println("REMOVING RANDOM BLOCK TO MAKE SPACE FOR" + address);
+			//System.out.println("REMOVING RANDOM BLOCK TO MAKE SPACE FOR" + address);
 			cache[TIO[1]][0].writeInstruction(newBlock, tags);
 		}
 	}
@@ -182,7 +187,7 @@ class InstructionCache {
 		instr.add(i25);
 		
 		
-		InstructionCache ic = new InstructionCache(2,8,2,instr,0);
+		InstructionCache ic = new InstructionCache(8,8,2,instr,0);
 	//	System.out.println(ic.read(2));
 	//	System.out.println(ic.read(3));
 	//	System.out.println(ic.read(2));
@@ -205,6 +210,8 @@ class InstructionCache {
 		System.out.println(ic.read(9));
 		System.out.println(ic.read(8));
 		System.out.println(ic.read(9));
+		System.out.println(ic.read(2));
+		System.out.println(ic.read(3));
 		//System.out.println(ic.getAddressBase(11));
 	}
 	
