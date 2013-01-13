@@ -11,13 +11,14 @@ public class Instruction {
     ArrayList<String> loadInstructions;
     ArrayList<String> addInstructions;
     ArrayList<String> mulInstructions;
+    int address;
 //>>>>>>> memory
 	
 	public Instruction(int binary) {
 		// parser to get the type, rd, rs, rm
 	}
 	
-	public Instruction(String []instructionStr) {
+	public Instruction(String []instructionStr, int address) {
 		fields = new String[]{instructionStr.length >= 0 ? instructionStr[0] : null ,
 				instructionStr.length >= 1 ? instructionStr[1] : null,
 				instructionStr.length >= 2 ? instructionStr[2] : null,
@@ -33,6 +34,19 @@ public class Instruction {
 		this.fillAdd();
 		this.mulInstructions = new ArrayList<String>();
 		this.fillMul();
+		this.address = address;
+	}
+	public void setFetchTime(int fetchTime)
+	{
+		this.fetchTime = fetchTime;
+	}
+	public void setIssueTime(int issueTime)
+	{
+		this.issueTime = issueTime;
+	}
+	public int getAddress()
+	{
+		return this.address;
 	}
 	public void fillLoad()
 	{
@@ -64,8 +78,8 @@ public class Instruction {
 	public void fillMul()
 // <<<<<<< master (Nada)
 	{
-		this.addInstructions.add("MUL");
-		this.addInstructions.add("DIV");
+		this.mulInstructions.add("MUL");
+		this.mulInstructions.add("DIV");
 	}
 	public void setStatus(String status)
 	{
@@ -75,9 +89,18 @@ public class Instruction {
 	{
 		return this.status;
 	}
+	public void setExecuteTime(int exec)
+	{
+		this.excuteTime = exec;
+	}
+	public void setWrittenTime(int time)
+	{
+		this.writeTime = time;
+	}
 	public String toString()
 	{
-		return fields[0] + " " + fields[1] + " " + fields[2] + " " + fields[3];
+		return fields[0] + " " + fields[1] + " " + fields[2] + " " + fields[3] + " WAS FETCHED AT " + this.fetchTime + " ISSUED AT " + this.issueTime + " Executed AT " + this.excuteTime 
+				+ " WRITTEN AT " + this.writeTime;
 	}
 // =======
 
