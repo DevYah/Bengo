@@ -79,10 +79,10 @@ class Cache {
 		return resBlock;
 	}
 
-	public void write(int address, short[] value) {
+	public void write(int address, short[] value, boolean dirtyWrite) {
 		int[] TIO = map(address);
 
-		cacheGroups[TIO[1]].write(TIO, value);
+		cacheGroups[TIO[1]].write(TIO, value, dirtyWrite);
 	}
 
 	// for reading
@@ -112,6 +112,11 @@ class Cache {
 			s += "\n";
 		}
 		return s;
+	}
+
+	public CacheBlock getBlockToReplace(int address) {
+		int[] TIO = map(address);
+		return cacheGroups[TIO[1]].getLRUBlock();
 	}
 
 }

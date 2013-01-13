@@ -21,12 +21,12 @@ class CacheGroup {
 		return null;
 	}
 	
-	public void write(int[] TIO, short[] block) {
+	public void write(int[] TIO, short[] block, boolean dirtyWrite) {
 		// search for the same tag
 		for (int i = 0; i < blocks.length; i++)
 		{
 			if (blocks[i].tag == TIO[0]) {
-				blocks[i].write(block, TIO[0]);
+				blocks[i].write(block, TIO[0], dirtyWrite);
 				return;
 			}
 		}
@@ -37,7 +37,7 @@ class CacheGroup {
 			if(blocks[i].isEmpty())
 			{
 				// assign cache block to data
-				blocks[i].write(block, TIO[0]);
+				blocks[i].write(block, TIO[0], dirtyWrite);
 				return;
 			}
 		}
@@ -46,13 +46,7 @@ class CacheGroup {
 //		blocks[rand].write(block, TIO[0]);
 		
 		// replace LRU
-		int LRUIndex = 0;
-		for (int i = 1; i < blocks.length; i++) {
-			if (blocks[i].lastUsed < blocks[LRUIndex].lastUsed)
-				LRUIndex = i;
-		}
-		
-		blocks[LRUIndex].write(block, TIO[0]);
+		getLRUBlock().write(block, TIO[0], dirtyWrite);
 		return;
 		
 	}
@@ -63,5 +57,15 @@ class CacheGroup {
 			s += ",";
 		}
 		return s;	
+	}
+
+	public CacheBlock getLRUBlock() {
+		// TODO Auto-generated method stub
+		int LRUIndex = 0;
+		for (int i = 1; i < blocks.length; i++) {
+			if (blocks[i].lastUsed < blocks[LRUIndex].lastUsed)
+				LRUIndex = i;
+		}
+		return blocks[LRUIndex];
 	}
 }

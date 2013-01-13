@@ -9,21 +9,27 @@ public class WriteAction {
 	Memory mem;
 	int address;
 	short word;
+	boolean dirtyWrite;
 
-	public WriteAction(int startCycle, int neededCycles, Memory mem, Cache cache, int address, short word) {;
+	public WriteAction(int startCycle, int neededCycles, Memory mem, Cache cache, int address, short word, boolean dirtyWrite) {;
 		this.startCycle = startCycle;
 		this.neededCycles = neededCycles;
 		this.cache = cache;
 		this.mem = mem;
 		this.address = address;
 		this.word = word;
+		this.dirtyWrite = dirtyWrite;
 	}
 
+	public WriteAction(int startCycle, int neededCycles, Memory mem, Cache cache, int address, short word) {
+		this(startCycle, neededCycles, mem, cache, address, word, true);
+	}
+	
 	public void update() {
 		if (Bengo.CURRENT_CYCLE == startCycle + neededCycles - 1) {
 			if (cache != null) { // write to cache action
 				System.out.println("writing to cache " + cache.name + "  address: " + address + "  word: " + word+ "  at cycle: " + Bengo.CURRENT_CYCLE);
-				cache.write(address, cache.compatibleBlock(address, word, mem));
+				cache.write(address, cache.compatibleBlock(address, word, mem), dirtyWrite);
 				System.out.println(cache);
 			}
 			else {

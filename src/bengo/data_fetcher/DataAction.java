@@ -23,10 +23,6 @@ class DataAction {
 		this.reads = reads;
 	}
 
-	public DataAction(int address, int startCycle, int neededCycles, short word) {
-		this(address,  startCycle,  neededCycles,  word, new ArrayList<WriteAction>(), new ArrayList<ReadAction>());
-	}
-
 	public void update() {
 		updateWrites();
 		updateReads();
@@ -109,7 +105,7 @@ class DataAction {
 	}
 
 	public static void test() {
-		DataAction d = new DataAction(123, 0, 2,(short) 1213);
+		DataAction d = new DataAction(123, 0, 2,(short) 1213, new ArrayList<WriteAction>(), new ArrayList<ReadAction>());
 		if (d.getData() != null)
 			System.out.println(d.getData());
 		Bengo.CURRENT_CYCLE ++;
