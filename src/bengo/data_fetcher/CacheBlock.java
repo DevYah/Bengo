@@ -6,14 +6,14 @@ class CacheBlock {
 
 	int blockSize; // in words
 	int tag;
-	private int[] data;
+	private short[] data;
 	int lastUsed;
 	boolean empty;
 	boolean dirty; // for write back
 
 	public CacheBlock(int blockSize) {
 		tag  = -1;
-		data = new int[blockSize];
+		data = new short[blockSize];
 		this.blockSize = blockSize;
 		empty = true;
 	}
@@ -23,11 +23,11 @@ class CacheBlock {
 		return this.empty;
 	}
 
-	public int[] getData(){
+	public short[] getData(){
 		lastUsed = Bengo.CURRENT_CYCLE;
 		return data;
 	}
-	public void write(int[] newData, int tag){
+	public void write(short[] newData, int tag){
 		try {
 	//		this.data = makeCompatible(newData);
 			if (newData.length != this.blockSize)

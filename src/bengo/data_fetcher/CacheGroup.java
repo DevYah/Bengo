@@ -12,7 +12,7 @@ class CacheGroup {
 		}
 	}
 	
-	public int[] readBlock(int address, int tag) {
+	public short[] readBlock(int address, int tag) {
 		for (CacheBlock b : blocks){
 			if (b.tag == tag){ // found
 				return b.getData();
@@ -21,7 +21,7 @@ class CacheGroup {
 		return null;
 	}
 	
-	public void write(int[] TIO, int[] block) {
+	public void write(int[] TIO, short[] block) {
 		// search for the same tag
 		for (int i = 0; i < blocks.length; i++)
 		{

@@ -1,6 +1,7 @@
 package bengo.data_fetcher;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import bengo.Bengo;
 
@@ -31,7 +32,7 @@ public class BengoData {
 
 	public DataAction read(int address) {
 		int neededCycles = 0;
-		int[] res;
+		short[] res;
 		int wordOffset;
 		int i;
 		boolean foundInCache = false;
@@ -57,7 +58,7 @@ public class BengoData {
 		ArrayList<WriteAction> writes = new ArrayList<WriteAction>();
 		for (int j = i-1; j >= 0; j--) {
 			// dont' apply penalty
-			int[] block = caches[j].compatibleBlock(address, mem);
+			short[] block = caches[j].compatibleBlock(address, mem);
 			caches[j].write(address, block);
 			
 			// apply penalty
@@ -68,12 +69,12 @@ public class BengoData {
 		return new DataAction(address, Bengo.CURRENT_CYCLE, neededCycles, value, writes);
 	}
 
-	public DataAction write(int address, int word) {
+	public DataAction write(int address, short word) {
 		return write(address, word, false);
 	}
 	
 	// instant, no penalty calculations
-	public DataAction write(int address, int word, boolean instant) {
+	public DataAction write(int address, short word, boolean instant) {
 		if (instant == true) {
 			mem.write(address, word);
 			for (int i = 0; i < caches.length; i++)
@@ -106,7 +107,7 @@ public class BengoData {
 	}
 
 	// assume no buffer
-	private DataAction writeThrough(int address, int word, int cacheIndex) {
+	private DataAction writeThrough(int address, short word, int cacheIndex) {
 		int neededCycles = 0;
 		ArrayList<WriteAction> writes = new ArrayList<WriteAction>();
 		for (int i = 0; i < caches.length; i++) {
@@ -129,7 +130,7 @@ public class BengoData {
 		return null;
 	}
 
-	private DataAction writeAllocate(int address, int word, int cacheIndex) {
+	private DataAction writeAllocate(int address, short word, int cacheIndex) {
 		int neededCycles = 0;
 		ArrayList<WriteAction> writes = new ArrayList<WriteAction>();
 		
@@ -167,10 +168,10 @@ public class BengoData {
 //		System.out.println("-------------------------");
 //		System.out.println(d.caches[1]);
 		Memory mem = new Memory(50);
-		mem.write(0, 99);
-		mem.write(1, 98);
-		mem.write(7, 97);
-		mem.write(6, 96);
+		mem.write(0, (short)99);
+		mem.write(1, (short)98);
+		mem.write(7, (short)97);
+		mem.write(6, (short)96);
 		d.mem = mem;
 
 //		System.out.println("caches[0] " + d.caches[0]);
@@ -188,7 +189,7 @@ public class BengoData {
 		System.out.println(d.caches[1]);
 
 		// test write-hit
-		DataAction action = d.write(7, 100, false);
+		DataAction action = d.write(7, (short)100, false);
 		for (int i = 0; i < 90; i++) {
 //			System.out.println("Cycle " + Bengo.CURRENT_CYCLE);
 //			System.out.println(action);
@@ -221,14 +222,16 @@ public class BengoData {
 		System.out.println(d.caches[1]);
 		System.out.println(mem);
 		
-		DataAction action = d.write(18, 88);
+		DataAction action = d.write(18, (short)88);
 		for (int i = 0; i < 90; i++) {
 			action.update();
 			Bengo.CURRENT_CYCLE++;
 		}
+		System.out.println(Arrays.toString(d.caches[1].map(18)));
 	}
 
 	public static void main(String[] args) {
 		test2();
+		System.out.println(Integer.toBinaryString(18));
 	}
 }

@@ -64,6 +64,8 @@ class Cache {
 		int index 	= address & ((makeNOnes(log2(numGroups))) << log2(blockSize));
 		index = index >> log2(blockSize);
 
+		if (name.equals("L2"))
+			System.out.println(((log2(blockSize) + log2(numGroups))));
 		int tag = address >> ((log2(blockSize) + log2(numGroups)));
 
 //		System.out.println(tag + " " + index + " " + offset);
@@ -71,24 +73,24 @@ class Cache {
 	}
 
 
-	public int[] read(int address) {
+	public short[] read(int address) {
 	    // TIO = {Tag, Index, Offset}
 	    int[] TIO = map(address);
 
-    	int[] resBlock = cacheGroups[TIO[1]].readBlock(address, TIO[0]);
+    	short[] resBlock = cacheGroups[TIO[1]].readBlock(address, TIO[0]);
 		return resBlock;
 	}
 
-	public void write(int address, int[] value) {
+	public void write(int address, short[] value) {
 		int[] TIO = map(address);
 
 		cacheGroups[TIO[1]].write(TIO, value);
 	}
 
 	// for reading
-	public int[] compatibleBlock(int address, Memory mem) {
+	public short[] compatibleBlock(int address, Memory mem) {
 		int wordOffset = map(address)[2] >> 2;
-		int[] block = new int[blockSize];
+		short[] block = new short[blockSize];
 		int baseAddress = address - wordOffset;
 		for (int k = 0; k < blockSize; k++) {
 			block[k] = mem.read(baseAddress + k);
@@ -97,8 +99,8 @@ class Cache {
 	}
 
 	// for writing
-	public int[] compatibleBlock(int address, int wordToWrite, Memory mem) {
-		int[] blockToWrite = compatibleBlock(address, mem);
+	public short[] compatibleBlock(int address, short wordToWrite, Memory mem) {
+		short[] blockToWrite = compatibleBlock(address, mem);
 		int offset = map(address)[2] >> 2;
 		blockToWrite[offset] = wordToWrite;
 		return blockToWrite;

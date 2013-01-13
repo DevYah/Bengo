@@ -8,9 +8,9 @@ public class WriteAction {
 	Cache cache;
 	Memory mem;
 	int address;
-	int word;
+	short word;
 
-	public WriteAction(int neededCycles, Memory mem, Cache cache, int address, int word) {;
+	public WriteAction(int neededCycles, Memory mem, Cache cache, int address, short word) {;
 		this.startCycle = -5555;
 		this.neededCycles = neededCycles;
 		this.cache = cache;
