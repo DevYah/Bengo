@@ -19,6 +19,8 @@ class DataAction {
 		this.word = word;
 
 		this.writes = writes;
+		if (writes.size() >= 1)
+			this.writes.get(0).startCycle = Bengo.CURRENT_CYCLE;
 	}
 
 	public DataAction(int address, int startCycle, int neededCycles, int word) {
@@ -32,7 +34,7 @@ class DataAction {
 		if (writes.get(0).isReady()) {
 			writes.remove(0);
 			if (writes.size() != 0)
-				writes.get(0).startCycle = Bengo.CURRENT_CYCLE;
+				writes.get(0).startCycle = Bengo.CURRENT_CYCLE + 1;
 		}
 		
 	}

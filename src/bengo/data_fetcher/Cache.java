@@ -2,6 +2,10 @@ package bengo.data_fetcher;
 
 class Cache {
 
+	static int WRITE_THROUGH = 0;
+	static int WRITE_BACK = 1;
+	static int WRITE_ALLOCATE = 0;
+	static int WRITE_AROUND = 1;
 	// Input
 	int numWords;
 	int blockSize; // in words
@@ -9,12 +13,13 @@ class Cache {
 	int hitPolicy; // 0 for write through, 1 for write back
 	int missPolicy; // 0 for write allocate, 1 for write around
 	int hitTime;
+	String name;
 
 	// Calculated
 	int numGroups;
 	CacheGroup[] cacheGroups;
-	int[] tags;
 
+	static int count = 0;
 	public Cache(int numWords,  int blockSize, int hitTime,
 				int assoc, int hitPolicy, int missPolicy) {
 		this.numWords 		= numWords;
@@ -29,11 +34,8 @@ class Cache {
 		for (int i = 0; i < cacheGroups.length; i++)
 			cacheGroups[i] = new CacheGroup(associativity, blockSize);
 
-
-		System.out.println("numWords " + numWords);
-		System.out.println("numGroups " + numWords);
-
-		tags 		= new int[numGroups * associativity];
+		
+		this.name = "L" + ++count;
 	}
 
 	/*
@@ -103,7 +105,7 @@ class Cache {
 	}
 
 	public String toString() {
-		String s = "";
+		String s = "Cache " + name + ":\n";
 		for (int i = 0; i < cacheGroups.length; i++) {
 			s += "index " + i + ":";
 			s += cacheGroups[i];

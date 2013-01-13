@@ -2,7 +2,7 @@ package bengo.data_fetcher;
 
 import java.util.HashMap;
 
-class Memory {
+public class Memory {
 	public int hitTime;
 	HashMap<Integer, Integer> map;
 
@@ -16,10 +16,19 @@ class Memory {
 	}
 
 	public Integer read(int address) {
-		return map.get(address);
+		
+		Integer val = map.get(address);
+		if (val == null)
+			val = -1;
+		return val;
+			
 	}
 
 	public void write(int address, int value) {
 		map.put(address, value);
+	}
+	
+	public String toString() {
+		return "Memory: " + map.toString();
 	}
 }
