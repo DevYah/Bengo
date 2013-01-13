@@ -170,8 +170,10 @@ public class BengoData {
 	}
 
 	private ArrayList<WriteAction> writeAround(int address, short word, int cacheIndex) {
-		// TODO write around
-		return null;
+		ArrayList<WriteAction> writes = new ArrayList<WriteAction>();
+		WriteAction write = new WriteAction(Bengo.CURRENT_CYCLE, mem.hitTime, mem, null, address, word);
+		writes.add(write);
+		return writes;
 	}
 
 	private ArrayList<WriteAction> writeAllocate(int address, short word, int cacheIndex) {
