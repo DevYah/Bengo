@@ -26,7 +26,7 @@ class CacheGroup {
 		for (int i = 0; i < blocks.length; i++)
 		{
 			if (blocks[i].tag == TIO[0]) {
-//				blocks[i].write(block, TIO[0]);
+				blocks[i].write(block, TIO[0]);
 				return;
 			}
 		}
