@@ -36,11 +36,15 @@ public class BengoData {
 		int wordOffset;
 		int i;
 		boolean foundInCache = false;
-		int value = -55555555;
+		short value = -5555;
+		ArrayList<WriteAction> writes = new ArrayList<WriteAction>();
+		ArrayList<ReadAction> reads = new ArrayList<ReadAction>();
 		for(i = 0; i < levels; i++) {
 			res = caches[i].read(address);
 			wordOffset = caches[i].map(address)[2] >> 2;
+			reads.add(new ReadAction(Bengo.CURRENT_CYCLE + neededCycles, caches[i].hitTime, mem, caches[i], address));
 			neededCycles += caches[i].hitTime; // in case of hit or miss
+			
 			if (res != null) { // in case of hit
 				foundInCache = true;
 				value = res[wordOffset];
@@ -49,24 +53,23 @@ public class BengoData {
 		}
 
 		if (!foundInCache) {
+			reads.add(new ReadAction(Bengo.CURRENT_CYCLE + neededCycles, mem.hitTime, mem, null, address));
 			value = mem.read(address);
 			neededCycles += mem.hitTime;
 		}
 
 		// write in the caches where the data doesn't exist
 //		 XXX assume no cycles to wait (uncommented). Updated, assume cycles to wait (commented0
-		ArrayList<WriteAction> writes = new ArrayList<WriteAction>();
 		for (int j = i-1; j >= 0; j--) {
 			// dont' apply penalty
-			short[] block = caches[j].compatibleBlock(address, mem);
-			caches[j].write(address, block);
+//			short[] block = caches[j].compatibleBlock(address, mem);
+//			caches[j].write(address, block);
 			
 			// apply penalty
-//			writes.add(new WriteAction(caches[j].hitTime, mem, caches[j], address, value));
-//			neededCycles += caches[j].hitTime;
+			writes.add(new WriteAction(Bengo.CURRENT_CYCLE + neededCycles, caches[j].hitTime, mem, caches[j], address, value));
+			neededCycles += caches[j].hitTime;
 		}
-		neededCycles += mem.hitTime;
-		return new DataAction(address, Bengo.CURRENT_CYCLE, neededCycles, value, writes);
+		return new DataAction(address, Bengo.CURRENT_CYCLE, neededCycles, value, writes, reads);
 	}
 
 	public DataAction write(int address, short word) {
@@ -111,13 +114,13 @@ public class BengoData {
 		int neededCycles = 0;
 		ArrayList<WriteAction> writes = new ArrayList<WriteAction>();
 		for (int i = 0; i < caches.length; i++) {
+			writes.add(0, new WriteAction(Bengo.CURRENT_CYCLE + neededCycles, caches[i].hitTime, mem, caches[i], address, word));
 			neededCycles += caches[i].hitTime;
-			writes.add(0, new WriteAction(caches[i].hitTime, mem, caches[i], address, word));
 		}
 
+		writes.add(0, new WriteAction(Bengo.CURRENT_CYCLE + neededCycles, mem.hitTime, mem, null, address, word));
 		neededCycles += mem.hitTime;
-		writes.add(0, new WriteAction(mem.hitTime, mem, null, address, word));
-		return new DataAction(address, Bengo.CURRENT_CYCLE, neededCycles, word, writes);
+		return new DataAction(address, Bengo.CURRENT_CYCLE, neededCycles, word, writes, new ArrayList<ReadAction>());
 	}
 
 	private DataAction writeBack(int address, int word, int cacheIndex) {
@@ -135,21 +138,21 @@ public class BengoData {
 		ArrayList<WriteAction> writes = new ArrayList<WriteAction>();
 		
 		// write to memory
+		WriteAction memWrite = new WriteAction(Bengo.CURRENT_CYCLE + neededCycles, mem.hitTime, mem, null, address, word);
 		neededCycles += mem.hitTime;
-		WriteAction memWrite = new WriteAction(mem.hitTime, mem, null, address, word);
 		writes.add(memWrite);
 		
 		
 		// if one write allocate in one cache, assume write allocate in all lower caches (write around
 		// is not allowed).
 		for (int i = caches.length - 1; i >= cacheIndex; i--) {
-			WriteAction write = new WriteAction(caches[i].hitTime, mem, caches[i], address, word);
+			WriteAction write = new WriteAction(Bengo.CURRENT_CYCLE + neededCycles, caches[i].hitTime, mem, caches[i], address, word);
 			writes.add(write);
 			neededCycles += caches[i].hitTime;
 			
 		}
 		
-		return new DataAction(address, Bengo.CURRENT_CYCLE, neededCycles, word, writes);
+		return new DataAction(address, Bengo.CURRENT_CYCLE, neededCycles, word, writes, new ArrayList<ReadAction>());
 	}
 
 	// test reading and write hit
@@ -164,16 +167,19 @@ public class BengoData {
 		BengoData d = new BengoData(levels, numWords, blockSizes,
 									hitTimes, assocs, hitPolicies, missPolicies);
 
-//		System.out.println(d.caches[0]);
-//		System.out.println("-------------------------");
-//		System.out.println(d.caches[1]);
 		Memory mem = new Memory(50);
 		mem.write(0, (short)99);
 		mem.write(1, (short)98);
 		mem.write(7, (short)97);
 		mem.write(6, (short)96);
 		d.mem = mem;
+		
+//		d.caches[1].write(7, d.caches[1].compatibleBlock(7, mem));
 
+		System.out.println(d.caches[0]);
+		System.out.println("-------------------------");
+		System.out.println(d.caches[1]);
+		
 //		System.out.println("caches[0] " + d.caches[0]);
 		System.out.println(d.read(7));
 		System.out.println(d.caches[0]);
@@ -181,21 +187,22 @@ public class BengoData {
 		System.out.println(d.caches[1]);
 
 
-		System.out.println(d.read(7));
-		System.out.println(d.read(6));
-
-		System.out.println(d.caches[0]);
-		System.out.println("-------------------------");
-		System.out.println(d.caches[1]);
+//		System.out.println(d.read(7));
+//		System.out.println(d.read(6));
+//
+//		System.out.println(d.caches[0]);
+//		System.out.println("-------------------------");
+//		System.out.println(d.caches[1]);
 
 		// test write-hit
-		DataAction action = d.write(7, (short)100, false);
+//		DataAction action = d.write(7, (short)100, false);
+		DataAction action = d.read(7);
 		for (int i = 0; i < 90; i++) {
-//			System.out.println("Cycle " + Bengo.CURRENT_CYCLE);
-//			System.out.println(action);
+			System.out.println("Cycle " + Bengo.CURRENT_CYCLE);
+			System.out.println(action);
 			action.update();
 			Bengo.CURRENT_CYCLE++;
-//			System.out.println(mem.map);
+			System.out.println(mem.map);
 		}
 //
 		System.out.println(d.caches[0]);
@@ -231,7 +238,6 @@ public class BengoData {
 	}
 
 	public static void main(String[] args) {
-		test2();
-		System.out.println(Integer.toBinaryString(18));
+		test1();
 	}
 }

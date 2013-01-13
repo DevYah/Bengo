@@ -8,42 +8,62 @@ class DataAction {
 	int startCycle;
 	int neededCyles;
 	int address; // memory address
-	int word;
+	short word;
 
 	ArrayList<WriteAction> writes;
+	ArrayList<ReadAction> reads;
 
-	public DataAction(int address, int startCycle, int neededCycles, int word, ArrayList<WriteAction> writes) {
+	public DataAction(int address, int startCycle, int neededCycles, short word, ArrayList<WriteAction> writes, ArrayList<ReadAction> reads) {
 		this.startCycle = startCycle;
 		this.neededCyles = neededCycles;
 		this.address = address;
 		this.word = word;
 
 		this.writes = writes;
-		if (writes.size() >= 1)
-			this.writes.get(0).startCycle = Bengo.CURRENT_CYCLE;
+		this.reads = reads;
 	}
 
-	public DataAction(int address, int startCycle, int neededCycles, int word) {
-		this(address,  startCycle,  neededCycles,  word, new ArrayList<WriteAction>());
+	public DataAction(int address, int startCycle, int neededCycles, short word) {
+		this(address,  startCycle,  neededCycles,  word, new ArrayList<WriteAction>(), new ArrayList<ReadAction>());
 	}
 
 	public void update() {
+		updateWrites();
+		updateReads();
+	}
+	
+	public void updateReads() {
+		if (reads.size() == 0)
+			return;
+		
+		if (reads.get(0).startCycle > Bengo.CURRENT_CYCLE)
+			return ;
+		
+		reads.get(0).update();
+		if (reads.get(0).isReady()) {
+			reads.remove(0);
+		}
+	}
+	
+	public void updateWrites() {
 		if (writes.size() == 0)
 			return;
+		
+		if (writes.get(0).startCycle > Bengo.CURRENT_CYCLE)
+			return ;
+		
 		writes.get(0).update();
 		if (writes.get(0).isReady()) {
 			writes.remove(0);
-			if (writes.size() != 0)
-				writes.get(0).startCycle = Bengo.CURRENT_CYCLE + 1;
 		}
 		
 	}
 
 	public boolean isReady() {
-		if (startCycle + neededCyles == Bengo.CURRENT_CYCLE) {
+		if (startCycle + neededCyles - 1 == Bengo.CURRENT_CYCLE) {
 			return true;
 		}
-		if (startCycle + neededCyles + 1 < Bengo.CURRENT_CYCLE) {
+		if (startCycle + neededCyles - 1  < Bengo.CURRENT_CYCLE) {
 			System.out.println("WARNING: somthing is wrong, this check is bad." +
 					" The fetch instructino of address " + address
 					+ " was ready at least one cycle before the check");
@@ -56,13 +76,13 @@ class DataAction {
 		return Bengo.CURRENT_CYCLE - startCycle - neededCyles;
 	}
 
-	public Integer getData() {
+	public Short getData() {
 		if (isReady()) {
 			return word;
 		}
 		else {
 			System.err.println("Data is not ready yet");
-			return (Integer) null;
+			return (Short) null;
 		}
 	}
 
@@ -75,6 +95,11 @@ class DataAction {
 			s += " (Ready)";
 		else
 			s += " (Not Ready)";
+		
+		s += "\nreads: \n";
+		for (ReadAction w : reads)
+			s += "\t" +  w.toString() + "\n";
+		
 		s += "\nwrites: \n";
 		for (WriteAction w : writes)
 			s += "\t" +  w.toString() + "\n";
@@ -84,7 +109,7 @@ class DataAction {
 	}
 
 	public static void test() {
-		DataAction d = new DataAction(123, 0, 2, 1213);
+		DataAction d = new DataAction(123, 0, 2,(short) 1213);
 		if (d.getData() != null)
 			System.out.println(d.getData());
 		Bengo.CURRENT_CYCLE ++;
