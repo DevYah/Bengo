@@ -7,8 +7,9 @@ class CacheBlock {
 	int blockSize; // in words
 	int tag;
 	int[] data;
-	int lastUpdated;
+	int lastUsed;
 	boolean empty;
+	boolean dirty; // for write back
 
 	public CacheBlock(int blockSize) {
 		tag  = -1;
@@ -31,7 +32,7 @@ class CacheBlock {
 				this.data = newData;
 
 			this.tag = tag;
-			lastUpdated = Bengo.CURRENT_CYCLE;
+			lastUsed = Bengo.CURRENT_CYCLE;
 			empty = false;
 		} catch (Exception e) {
 			e.printStackTrace();
