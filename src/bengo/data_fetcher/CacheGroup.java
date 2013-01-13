@@ -15,7 +15,7 @@ class CacheGroup {
 	public int[] readBlock(int address, int tag) {
 		for (CacheBlock b : blocks){
 			if (b.tag == tag){ // found
-				return b.data;
+				return b.getData();
 			}
 		}
 		return null;
@@ -42,8 +42,19 @@ class CacheGroup {
 			}
 		}
 		
-		// replace Randomly
-		int rand = (int) Math.random() * blocks.length;
+//		int rand = (int) Math.random() * blocks.length;
+//		blocks[rand].write(block, TIO[0]);
+		
+		// replace LRU
+		int LRUIndex = 0;
+		for (int i = 1; i < blocks.length; i++) {
+			if (blocks[i].lastUsed < blocks[LRUIndex].lastUsed)
+				LRUIndex = i;
+		}
+		
+		blocks[LRUIndex].write(block, TIO[0]);
+		return;
+		
 	}
 	public String toString() {
 		String s = "";
