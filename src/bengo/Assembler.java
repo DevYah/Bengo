@@ -21,11 +21,20 @@ public class Assembler {
 		error = "";
 	}
 	
+	public String[] extractArguments(String line) {
+		String[] args = line.split(",");
+		String[] ret = new String[args.length + 1];
+		ret[0] = args[0].split("[ ]+")[0];
+		ret[1] = args[0].split("[ ]+")[1];
+		for (int i = 1; i < args.length; ++i)
+			ret[i + 1] = args[i].trim();
+		return ret;
+	}
+	
 	public boolean assemble() throws IOException {
 		//TODO Test
 		BufferedReader std = new BufferedReader(new FileReader(new File(FILE_NAME)));
-		Pattern commandMatcher = Pattern.compile("[A-Z]+ (?:[a-zA-Z_0-9]+, )*(?:[a-zA-Z_0-9]+)");
-		// FIXME: Handle negative numbers.
+		Pattern commandMatcher = Pattern.compile("[A-Z]+ +(?:[a-zA-Z_0-9]+, *)*(?:(?:[a-zA-Z_0-9]+)|(?:-?[0-9]+))");
 		Pattern intMatcher = Pattern.compile("-?[0-9]+");
 		ArrayList<Instruction> instructions = new ArrayList<Instruction>();
 		program = null;
@@ -34,12 +43,11 @@ public class Assembler {
 			String inst = std.readLine();
 			if (inst == null)
 				break;
+			inst = inst.trim();
 			if (!commandMatcher.matcher(inst).matches())
 				return setErrorMessage(lineNum, "Invalid syntax");
 			
-			String[] args = inst.split(" ");
-			for (int i = 0; i < args.length; ++i)
-				args[i] = args[i].split(",")[0];
+			String[] args = extractArguments(inst);
 			
 			int command_ind = -1;
 			for (int i = 0; i < commands.length; ++i)
@@ -65,11 +73,17 @@ public class Assembler {
 			for (int i = 0; i < commandArgsCount[command_ind] - commandRegCount[command_ind]; ++i) {
 				if (!intMatcher.matcher(args[args.length - 1 - i]).matches())
 					return setErrorMessage(lineNum, String.format("Invalid argument, argument #%d", args.length - 1 - i));
+				else {
+					int address = Integer.parseInt(args[args.length - 1 - i]);
+					if (address > 63 || address < -64)
+						return setErrorMessage(lineNum, String.format("Invalid argument, argument #%d", args.length - 1 - i));
+					 
+				}
 			}
 			instructions.add(new Instruction(args, lineNum - 1));
 			++lineNum;
 		}
-		program = (Instruction[]) instructions.toArray();
+		program = instructions.toArray(new Instruction[0]);
 		return true;
 	}
 	
@@ -80,7 +94,19 @@ public class Assembler {
 		error = String.format("Error in Line No. %d : %s", lineNum, e);
 		return false;
 	}
-	public Instruction[] gerProgram() {
+	public Instruction[] getProgram() {
 		return program;
+	}
+	
+	public static void main(String[] args) throws IOException {
+		Assembler q = new Assembler("AssmeblerTest");
+		if (q.assemble()) {
+			Instruction[] program = q.getProgram();
+			for (int i = 0; i < program.length; ++i) {
+				System.out.println(program[i]);
+			}
+		} else {
+			System.out.println(q.getErrorMessage());
+		}
 	}
 }

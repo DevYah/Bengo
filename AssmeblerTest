@@ -1,0 +1,5 @@
+ADD R1, R2, R3
+ADD R2, R1, R2
+ADD R3, R1, R0
+ ADD  R3,R1,  R0 
+ADDI R3, R2, 12
