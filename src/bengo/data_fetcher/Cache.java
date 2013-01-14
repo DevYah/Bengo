@@ -14,6 +14,10 @@ class Cache {
 	int missPolicy; // 0 for write allocate, 1 for write around
 	int hitTime;
 	String name;
+	
+	double hits;
+	double misses;
+	double accesses;
 
 	// Calculated
 	int numGroups;
@@ -76,6 +80,7 @@ class Cache {
 	    int[] TIO = map(address);
 
     	short[] resBlock = cacheGroups[TIO[1]].readBlock(address, TIO[0]);
+    	
 		return resBlock;
 	}
 
@@ -83,6 +88,18 @@ class Cache {
 		int[] TIO = map(address);
 
 		cacheGroups[TIO[1]].write(TIO, value, dirtyWrite);
+	}
+	
+	public boolean isHit(int address) {
+		accesses++;
+		if (read(address) != null) { // hit
+			hits++;
+			return true;
+		}
+		else {
+			misses++;
+			return false;
+		}
 	}
 
 	// for reading
@@ -113,7 +130,15 @@ class Cache {
 		}
 		return s;
 	}
+	
+	public double getMissRatio() {
+		return misses*1.0/accesses;
+	}
 
+	public double getHitRatio() {
+		return hits*1.0/accesses;
+	}
+	
 	public CacheBlock getBlockToReplace(int address) {
 		int[] TIO = map(address);
 		return cacheGroups[TIO[1]].getLRUBlock();

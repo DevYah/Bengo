@@ -51,7 +51,7 @@ public class BengoData {
 			
 			neededCycles += caches[i].hitTime; // in case of hit or miss
 			
-			if (res != null) { // in case of hit
+			if (caches[i].isHit(address)) { // in case of hit
 				foundInCache = true;
 				value = res[wordOffset];
 				break;
@@ -92,7 +92,7 @@ public class BengoData {
 			return null;
 		}
 		ArrayList<WriteAction> writes;
-		if(caches[0].read(address) != null) {// hit
+		if(caches[0].isHit(address)) {// hit
 			System.out.println("HIT");
 			if (caches[0].hitPolicy == Cache.WRITE_THROUGH) { // write through
 				writes=  writeThrough(address, word, 0);
@@ -228,13 +228,12 @@ public class BengoData {
 		System.out.println(d.caches[1]);
 		
 //		System.out.println("caches[0] " + d.caches[0]);
-		System.out.println(d.read(7));
+//		System.out.println(d.read(7));
 		System.out.println(d.caches[0]);
 		System.out.println("-------------------------");
 		System.out.println(d.caches[1]);
 
 
-//		System.out.println(d.read(7));
 //		System.out.println(d.read(6));
 //
 //		System.out.println(d.caches[0]);
@@ -244,18 +243,40 @@ public class BengoData {
 		// test write-hit
 //		DataAction action = d.write(7, (short)100, false);
 		DataAction action = d.read(7);
-		for (int i = 0; i < 90; i++) {
-			System.out.println("\n\nCycle " + Bengo.CURRENT_CYCLE);
-			System.out.println(action);
+//		System.out.println(action);
+		for (int i = 0; i < 120; i++) {
+//			System.out.println("\n\nCycle " + Bengo.CURRENT_CYCLE);
+//			System.out.println(action);
 			action.update();
 			Bengo.CURRENT_CYCLE++;
-			System.out.println(mem.map);
+//			System.out.println(mem.map);
 		}
-//
+		
+		System.out.println("\n\n----$$$$\n\n");
+		action = d.read(7);
+		System.out.println(action);
+		for (int i = 0; i < 120; i++) {
+			action.update();
+			Bengo.CURRENT_CYCLE++;
+		}
+		
+		System.out.println("\n\n----$$$$\n\n");
+		action = d.read(7);
+		System.out.println(action);
+		for (int i = 0; i < 120; i++) {
+			action.update();
+			Bengo.CURRENT_CYCLE++;
+		}
 		System.out.println(d.caches[0]);
 		System.out.println(mem.map);
 		System.out.println("-------------------------");
 		System.out.println(d.caches[1]);
+		
+		System.out.println("misses: " + d.caches[0].misses);
+		System.out.println("hits  " +d.caches[0].hits);
+		System.out.println();
+		System.out.println("misses: " + d.caches[1].misses);
+		System.out.println("hits: " + d.caches[1].hits);
 	}
 	
 	public static void test2() {
@@ -353,7 +374,7 @@ public class BengoData {
 	}
 
 	public static void main(String[] args) {
-//		test1();
-		testWB();
+		test1();
+//		testWB();
 	}
 }
