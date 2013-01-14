@@ -19,10 +19,11 @@ public class Instruction {
 	}
 	
 	public Instruction(String []instructionStr, int address) {
+		System.out.println(instructionStr.length);
 		fields = new String[]{instructionStr.length >= 0 ? instructionStr[0] : null ,
-				instructionStr.length >= 1 ? instructionStr[1] : null,
-				instructionStr.length >= 2 ? instructionStr[2] : null,
-				instructionStr.length >= 3 ? instructionStr[3] : null};
+				instructionStr.length > 1 ? instructionStr[1] : null,
+				instructionStr.length > 2 ? instructionStr[2] : null,
+				instructionStr.length > 3 ? instructionStr[3] : null};
 		fetchTime 	= -1;
 		issueTime 	= -1;
 		excuteTime	= -1;
@@ -39,6 +40,10 @@ public class Instruction {
 	public void setFetchTime(int fetchTime)
 	{
 		this.fetchTime = fetchTime;
+	}
+	public void setCommit(int time)
+	{
+		this.commitTime = time;
 	}
 	public void setIssueTime(int issueTime)
 	{
@@ -75,6 +80,12 @@ public class Instruction {
 			return "MULT";
 		return "INVALID COMMAND";
 	}
+	public boolean isBranch()
+	{
+		if(this.fields[0].equalsIgnoreCase("JMP") || this.fields[0].equalsIgnoreCase("BEQ") || this.fields[0].equalsIgnoreCase("RET") || this.fields[0].equalsIgnoreCase("JALR") )
+			return true;
+		return false;
+	}
 	public void fillMul()
 // <<<<<<< master (Nada)
 	{
@@ -95,12 +106,14 @@ public class Instruction {
 	}
 	public void setWrittenTime(int time)
 	{
+		
 		this.writeTime = time;
+		System.err.println("WRITING INSTRUCTION : " + this.toString());
 	}
 	public String toString()
 	{
 		return fields[0] + " " + fields[1] + " " + fields[2] + " " + fields[3] + " WAS FETCHED AT " + this.fetchTime + " ISSUED AT " + this.issueTime + " Executed AT " + this.excuteTime 
-				+ " WRITTEN AT " + this.writeTime;
+				+ " WRITTEN AT " + this.writeTime + " COMMITTED AT " + this.commitTime;
 	}
 // =======
 

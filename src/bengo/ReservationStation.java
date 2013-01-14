@@ -15,11 +15,16 @@ public class ReservationStation {
 	int ROBEntry;
 	int remainingTime;
 	boolean execReady = false;
+	boolean isWritten = false;
 	
 	
 	public ReservationStation(String name)
 	{
 		this.name = name;
+	}
+	public void setWritten(boolean written)
+	{
+		this.isWritten = written;
 	}
 	public void setROBIndex(int ROBEntry)
 	{
@@ -67,7 +72,7 @@ public class ReservationStation {
 		this.instruction = instruction;
 		this.remainingTime = delay;
 		this.use();
-		System.err.println("Instruction " + instruction + " assigned to " + name + " with delay " + delay);
+	//	System.err.println("Instruction " + instruction + " assigned to " + name + " with delay " + delay);
 		
 	}
 	public boolean isFinished()
@@ -75,20 +80,22 @@ public class ReservationStation {
 		remainingTime--;
 		if(remainingTime == 0)
 		{
-			this.busy = false;
+			//this.busy = false;
 			execReady = true;
 			return true;
 		}
-		System.out.println("REMAINING TIME " + remainingTime);
+	//	System.out.println("REMAINING TIME " + remainingTime);
 		return false;
 	}
 	public void reset()
 	{
+		// called when reservation station is done
 		System.out.println("--------RESET  " + this.name);
 		vj = qj = qk = vk = "";
-		busy = execReady = false;
+		busy = execReady = isWritten = false;
 		answer = remainingTime = ROBEntry = 0;
 		this.instruction = null;
+		
 	}
 
 	public String getVk() {
