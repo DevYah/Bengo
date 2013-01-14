@@ -10,3 +10,7 @@
 .classpath
 .project
 .settings/*
+/Bengo/nbproject/private/
+/Bengo/build/
+/Bengo/dist/
+/Bengo0o/nbproject/private/
