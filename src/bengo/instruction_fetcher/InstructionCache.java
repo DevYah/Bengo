@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 import bengo.Instruction;
 
- class InstructionCache {
+  class InstructionCache {
 	
 	int levels;
 	
@@ -16,6 +16,8 @@ import bengo.Instruction;
 	int instructionsPerLine;
 	ArrayList<Instruction> instructs;
 	int hitTime;
+	int misses = 0;
+	int references = 0;
 	public InstructionCache(int assoc, int lines, int instructionsPerLine, ArrayList<Instruction> instructs, int hitTime)
 	{
 		this.hitTime = hitTime;
@@ -37,6 +39,7 @@ import bengo.Instruction;
 	public Instruction read(int address)
 	{
 		//System.out.println("reading " + address);
+		references++;
 		int[] TIO = map(address);
 		//System.out.println(TIO[1]);
 		Instruction instr;
@@ -45,6 +48,7 @@ import bengo.Instruction;
 			if((instr = cache[TIO[1]][i].fetchInstruction(address)) != null)
 				return instr;
 		}
+	
 		
 		// Cache miss , update cache.
 		
@@ -55,6 +59,7 @@ import bengo.Instruction;
 	
 	public void updateCache(int address)
 	{
+		misses++;
 		// search for an empty cache line
 		int[] TIO = map(address);
 		int[] tags = new int[this.instructionsPerLine];
@@ -130,7 +135,14 @@ import bengo.Instruction;
 		
 		return new int[] {tag, index, offset};
 	}
-	
+	public double getHitRatio()
+	{
+		return ((references - misses) * 1.0) / references;
+	}
+	public int getReferenced()
+	{
+		return this.references;
+	}
 	public static void main(String[]args)
 	{
 		Instruction i1 = new Instruction(new String[]{"ADD1","R0","R1","R2"},0);

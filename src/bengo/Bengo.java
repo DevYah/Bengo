@@ -31,11 +31,12 @@ public class Bengo {
 	CircularQueue<ROBEntry> ROB;
 	int ROBSize = 4;
 	RegisterStatus registerStatus = new RegisterStatus();
-	ArrayList<ReservationStation> writeBack;
+	 ArrayList<ReservationStation> writeBack;
 	CDB dataBus;
 	Instruction lastInstr;
 	boolean done = false;
 	RegisterFile registerFile;
+	int cyclesSpanned = 0;
 	
 
 	// 	ROB, Reservation Station, Instruction, Cache & Memory
@@ -105,8 +106,9 @@ public class Bengo {
 		 int instructionsPerLine[] = new int[]{2,4,8};
 		 int memTime = 0;
 		 this.instructionFetcher = new InstructionFetcher(levels, assoc, lines, penalties, instructionsPerLine,instructs,memTime);
-		 this.remainingFetchDelay = ((Integer) this.instructionFetcher.fetchInstruction(fetchPC)[0]);
-		 this.lastFetched = (Instruction) this.instructionFetcher.fetchInstruction(fetchPC)[1];
+		 Object[] fetched = this.instructionFetcher.fetchInstruction(fetchPC);
+		 this.remainingFetchDelay = ((Integer) fetched[0]);
+		 this.lastFetched = (Instruction) fetched[1];
 		 fetchPC++;
 		 this.run();
 		
@@ -142,7 +144,9 @@ public class Bengo {
 		{
 			System.err.println("CAN RUN");
 			run();
+			
 		}
+	
 	}
 	public void fetch()
 	{
@@ -157,8 +161,9 @@ public class Bengo {
 	
 			if(fetchPC < instructs.size())
 			{
-				 this.remainingFetchDelay = (int) this.instructionFetcher.fetchInstruction(fetchPC)[0];
-				 this.lastFetched = (Instruction) this.instructionFetcher.fetchInstruction(fetchPC)[1];
+				 Object[] fetched = this.instructionFetcher.fetchInstruction(fetchPC);
+				 this.remainingFetchDelay = ((Integer) fetched[0]);
+				 this.lastFetched = (Instruction) fetched[1];
 				 System.err.print("FETCH DELAY SET TO " + this.remainingFetchDelay);
 				 System.err.println(lastFetched);
 			}
@@ -188,7 +193,6 @@ public class Bengo {
 					{
 						// LOAD INSTRUCTION ISSUE LOGIC HERE.
 						instrDelay = this.loadTime;
-						
 					}
 					else
 					{
@@ -393,7 +397,7 @@ public class Bengo {
 			if(!this.writeBack.get(0).instruction.isBranch())
 				this.dataBus.writeRegister(this.writeBack.get(0).instruction.fields[1], this.writeBack.get(0).answer);
 			if(this.writeBack.get(0).instruction.fields[0].equalsIgnoreCase("JALR"))
-				this.dataBus.writeRegister(this.writeBack.get(0).instruction.fields[1], this.writeBack.get(0).answer);
+				this.dataBus.writeRegister(this.writeBack.get(0).instruction.fields[1], this.dataBus.getRegisterValue(this.writeBack.get(0).instruction.fields[2]));
 			this.ROB.get(this.writeBack.get(0).ROBEntry).ready = true;
 			this.writeBack.get(0).reset();
 			this.writeBack.remove(0);
@@ -458,10 +462,14 @@ public class Bengo {
 					{
 						// branch is taken
 						if(this.ROB.peak().instr.fields[0].equalsIgnoreCase("JALR"))
-							this.registerFile.writeRegister(this.ROB.peak().dest,this.ROB.peak().val);
+							this.registerFile.writeRegister(this.ROB.peak().dest,this.dataBus.getRegisterValue(this.ROB.peak().instr.fields[2]));
 						this.ROB.peak().instr.setCommit(CURRENT_CYCLE);
 						if(ROB.peak().instr == this.lastInstr)
+						{
 							this.done = true;
+							this.cyclesSpanned = CURRENT_CYCLE;
+						}
+							
 						fetchPC = this.ROB.peak().val;
 						this.ROB.dequeue();
 						this.flush();
@@ -485,6 +493,10 @@ public class Bengo {
 		
 			}
 	}
+	public double getIPC()
+	{
+		return (this.instructs.size() * 1.0) / (CURRENT_CYCLE - 1);
+	}
 	public void printFetchTime()
 	{
 		for(int i = 0; i < this.instructs.size(); i++)
@@ -500,8 +512,14 @@ public class Bengo {
 		Bengo bengo = new Bengo();
 		bengo.printFetchTime();
 		bengo.printReservationStations();
-		System.out.println(Bengo.CURRENT_CYCLE);
+		System.out.println(bengo.CURRENT_CYCLE);
 		bengo.dataBus.printRegisters();
+		System.out.println(bengo.loadStations);
+		System.err.println("IPC = " + bengo.getIPC());
+		System.err.println("CYCLES SPANNED = " + (CURRENT_CYCLE - 1));
+		double[] iCacheHitRate = bengo.instructionFetcher.getHitRatio();
+		for(int i = 0; i < iCacheHitRate.length; i++)
+			System.err.println("HIT RATIO FOR CACHE LEVEL " + i + " = " + iCacheHitRate[i]);
 		
 	
 	}

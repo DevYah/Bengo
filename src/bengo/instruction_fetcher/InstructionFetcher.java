@@ -25,6 +25,10 @@ public class InstructionFetcher
 					instructionsPerLine[i],instructs,penalties[i]);
 		}
 	}
+	public InstructionCache getCache(int i)
+	{
+		return this.caches[i];
+	}
 	
 	public Object[] fetchInstruction(int address)
 	{
@@ -50,6 +54,13 @@ public class InstructionFetcher
 		//System.out.println("INSTRUCTION = " + instr);
 		//System.out.println("used cycles" + cycles);
 		return new Object[] {new Integer(cycles),instr};
+	}
+	public double[] getHitRatio()
+	{
+		double[] ret = new double[this.levels];
+		for(int i = 0; i < this.caches.length; i++)
+			ret[i] = this.caches[i].getHitRatio();
+		return ret;
 	}
 	
 	public static void main(String[]args)
