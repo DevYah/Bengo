@@ -6,13 +6,13 @@ class CacheBlock {
 
 	int blockSize; // in words
 	int tag;
-	int[] data;
-	int lastUpdated;
+	private short[] data;
+	int lastUsed;
 	boolean empty;
+	boolean dirty; // for write back
 
 	public CacheBlock(int blockSize) {
 		tag  = -1;
-		data = new int[blockSize];
 		this.blockSize = blockSize;
 		empty = true;
 	}
@@ -22,16 +22,25 @@ class CacheBlock {
 		return this.empty;
 	}
 
-	public void write(int[] newData, int tag){
+	public short[] getData(){
+		lastUsed = Bengo.CURRENT_CYCLE;
+		dirty = false;
+		return data;
+	}
+	public void write(short[] newData, int tag, boolean dirtyWrite){
 		try {
 	//		this.data = makeCompatible(newData);
+			dirty = dirtyWrite;
+			if (data == null) // first write is not dirty
+				dirty = false;
+			
 			if (newData.length != this.blockSize)
 				throw new Exception("Incompatible blockSize");
 			else
 				this.data = newData;
 
 			this.tag = tag;
-			lastUpdated = Bengo.CURRENT_CYCLE;
+			lastUsed = Bengo.CURRENT_CYCLE;
 			empty = false;
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -49,6 +58,7 @@ class CacheBlock {
 		}else {
 			s += "empty";
 		}
+		s += dirty? "D" : "N";
 		s += ">";
 		return s;
 
