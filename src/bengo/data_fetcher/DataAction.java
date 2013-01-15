@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 import bengo.Bengo;
 
-class DataAction {
+public class DataAction {
 	int startCycle;
 	int neededCyles;
 	int address; // memory address
@@ -21,6 +21,10 @@ class DataAction {
 
 		this.writes = writes;
 		this.reads = reads;
+	}
+	public int getNeededCycles()
+	{
+		return this.neededCyles;
 	}
 
 	public void update() {
@@ -62,7 +66,7 @@ class DataAction {
 		if (startCycle + neededCyles - 1  < Bengo.CURRENT_CYCLE) {
 			System.out.println("WARNING: somthing is wrong, this check is bad." +
 					" The fetch instructino of address " + address
-					+ " was ready at least one cycle before the check");
+					+ " was ready at  "  + (this.startCycle + this.neededCyles  - 1) +  " CURRENT CYCLE " + Bengo.CURRENT_CYCLE + " CYCLES " );
 			return true;
 		}
 		return false;
@@ -80,6 +84,7 @@ class DataAction {
 			System.err.println("Data is not ready yet");
 			return (Short) null;
 		}
+		
 	}
 
 	public String toString() {

@@ -2,20 +2,21 @@ package bengo;
 import java.util.HashMap;
 
 public class CDB {
-	HashMap<String, Integer> map;
+	HashMap<String, Short> map;
 	
 	public CDB()
 	{
-		this.map = new HashMap<String,Integer>();
+		this.map = new HashMap<String,Short>();
 		for(int i = 0; i <= 7; i++)
-			this.map.put("R" + i, 0);
+			this.map.put("R" + i,(short) 0);
+		this.map.put("R1",(short)12);
 	}
 	
-	public Integer getRegisterValue(String regName) {
+	public Short getRegisterValue(String regName) {
 		return map.get(regName);
 	}
 	
-	public void writeRegister(String regName, Integer value) {
+	public void writeRegister(String regName, Short value) {
 		if(regName != "R0")
 			map.put(regName, value);
 	}

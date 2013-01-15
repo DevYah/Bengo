@@ -2,10 +2,10 @@ package bengo.data_fetcher;
 
 class Cache {
 
-	static int WRITE_THROUGH = 0;
-	static int WRITE_BACK = 1;
-	static int WRITE_ALLOCATE = 0;
-	static int WRITE_AROUND = 1;
+	public final static int WRITE_THROUGH = 0;
+	public final static int WRITE_BACK = 1;
+	public final static int WRITE_ALLOCATE = 0;
+	public final static int WRITE_AROUND = 1;
 	// Input
 	int numWords;
 	int blockSize; // in words

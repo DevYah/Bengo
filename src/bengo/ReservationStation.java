@@ -1,5 +1,8 @@
 package bengo;
 
+import bengo.data_fetcher.DataAction;
+
+
 public class ReservationStation {
 	
 	Instruction instruction;
@@ -10,17 +13,27 @@ public class ReservationStation {
 	String vk ="";
 	String qj ="";
 	String qk ="";
-	int answer;
+	short answer;
 	String status;
 	int ROBEntry;
 	int remainingTime;
 	boolean execReady = false;
 	boolean isWritten = false;
-	
+	boolean raw = false;
+	DataAction dataAction;
 	
 	public ReservationStation(String name)
 	{
 		this.name = name;
+	}
+	public void update()
+	{
+		if(this.dataAction != null)
+			this.dataAction.update();
+	}
+	public void setDataAction(DataAction dataAction)
+	{
+		this.dataAction = dataAction;
 	}
 	public void setWritten(boolean written)
 	{
@@ -30,8 +43,9 @@ public class ReservationStation {
 	{
 		this.ROBEntry = ROBEntry;
 	}
-	public void setAnswer(int answer)
+	public void setAnswer(short answer)
 	{
+		System.out.println("CURRENT CYCLE ============================== " + Bengo.CURRENT_CYCLE + " ANSWER IS " + this.answer);
 		this.answer = answer;
 	}
 	public boolean isCompatible(String instructionType)
@@ -54,10 +68,17 @@ public class ReservationStation {
 	public void setQj(String qj)
 	{
 		this.qj = qj;
+		this.raw = true;
 	}
 	public void setQk(String qk)
 	{
 		this.qk = qk;
+		this.raw = true;
+	}
+	public short getAnswer()
+	{
+		System.out.println("GETTING ANSWER AT CYCLE  +  " + Bengo.CURRENT_CYCLE + " ANSWER IS " + this.answer );
+		return answer;
 	}
 	public void use()
 	{
@@ -76,25 +97,45 @@ public class ReservationStation {
 		
 	}
 	public boolean isFinished()
-	{
-		remainingTime--;
-		if(remainingTime == 0)
+	{		
+		if(raw)
+			remainingTime++;
+		if(this.dataAction != null)
 		{
-			//this.busy = false;
-			execReady = true;
-			return true;
+			if(this.dataAction.isReady())
+			{
+				this.execReady = true;
+				this.setAnswer(this.dataAction.getData());
+				System.err.println(" DATA = " + this.dataAction.getData());
+				return true;
+			}
+			
 		}
+		else
+		{
+			remainingTime--;
+			if(remainingTime == 0)
+			{
+				//this.busy = false;
+				execReady = true;
+				return true;
+			}
+		}
+		raw = false;
+		
 	//	System.out.println("REMAINING TIME " + remainingTime);
 		return false;
 	}
 	public void reset()
 	{
 		// called when reservation station is done
-		System.out.println("--------RESET  " + this.name);
+		//System.out.println("--------RESET  " + this.name);
 		vj = qj = qk = vk = "";
 		busy = execReady = isWritten = false;
-		answer = remainingTime = ROBEntry = 0;
+		remainingTime = ROBEntry = 0;
+		answer = 0;
 		this.instruction = null;
+		this.dataAction = null;
 		
 	}
 
@@ -113,7 +154,7 @@ public class ReservationStation {
 		if(this.instruction != null)
 		return "Instruction : " + this.instruction.toString() + " QJ " + this.qj + " QK " + this.qk
 				+ " VJ " + this.vj + " VK " + this.vk + " DEST " + this.ROBEntry + " Operation " + this.operation
-				+ " name " + this.name + " BUSY " + this.busy; 
+				+ " name " + this.name + " BUSY " + this.busy + " ANSWER = " + this.answer; 
 		return  "Instruction : null " + " QJ " + this.qj + " QK " + this.qk
 				+ " VJ " + this.vj + " VK " + this.vk + " DEST " + this.ROBEntry + " Operation " + this.operation
 				+ " name " + this.name + " BUSY " + this.busy; 
