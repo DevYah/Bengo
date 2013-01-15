@@ -45,7 +45,6 @@ public class ReservationStation {
 	}
 	public void setAnswer(short answer)
 	{
-		System.out.println("CURRENT CYCLE ============================== " + Bengo.CURRENT_CYCLE + " ANSWER IS " + this.answer);
 		this.answer = answer;
 	}
 	public boolean isCompatible(String instructionType)
@@ -77,7 +76,6 @@ public class ReservationStation {
 	}
 	public short getAnswer()
 	{
-		System.out.println("GETTING ANSWER AT CYCLE  +  " + Bengo.CURRENT_CYCLE + " ANSWER IS " + this.answer );
 		return answer;
 	}
 	public void use()
@@ -93,7 +91,6 @@ public class ReservationStation {
 		this.instruction = instruction;
 		this.remainingTime = delay;
 		this.use();
-	//	System.err.println("Instruction " + instruction + " assigned to " + name + " with delay " + delay);
 		
 	}
 	public boolean isFinished()
@@ -106,7 +103,6 @@ public class ReservationStation {
 			{
 				this.execReady = true;
 				this.setAnswer(this.dataAction.getData());
-				System.err.println(" DATA = " + this.dataAction.getData());
 				return true;
 			}
 			
@@ -123,13 +119,11 @@ public class ReservationStation {
 		}
 		raw = false;
 		
-	//	System.out.println("REMAINING TIME " + remainingTime);
 		return false;
 	}
 	public void reset()
 	{
 		// called when reservation station is done
-		//System.out.println("--------RESET  " + this.name);
 		vj = qj = qk = vk = "";
 		busy = execReady = isWritten = false;
 		remainingTime = ROBEntry = 0;

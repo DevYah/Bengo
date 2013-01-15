@@ -1,9 +1,5 @@
 package bengo;
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
+
 import java.util.ArrayList;
 
 
@@ -49,16 +45,8 @@ public class Bengo {
 	ArrayList<Instruction> fetchedInstructions;
 	ArrayList<Instruction> issuedInstructions;
 	InstructionFetcher instructionFetcher;
-	
-	//TODO divide stations.
-	/*
-	 *  int levels = 3;
-		 int assoc[] = new int[]{2,4,4};
-		 int lines[] = new int[]{12,16,20};
-		 int penalties[] = new int[]{2,4,6};
-		 int instructionsPerLine[] = new int[]{2,4,8};
-	 */
-	public Bengo(String fileName, int loadStations, int loadTime,
+
+	public Bengo(ArrayList<Instruction> ins, int loadStations, int loadTime,
 			int addStations, int addTime, int multStations, int multTime,
 			int divideTime, int ROBSize, int iLevels, int[]iAssoc, int[]iLines,int[] iPenalties,
 			int[] iInstructionsPerLine,
@@ -101,7 +89,7 @@ public class Bengo {
 		 }
 		 this.instructs = new ArrayList<Instruction>();
 		// read the instructions
-		 try
+		/* try
 		 {
 			 BufferedReader instructionsReader = new BufferedReader(new FileReader(fileName)); 
 			 String instructionStr;
@@ -123,7 +111,8 @@ public class Bengo {
 		 catch(FileNotFoundException e)
 		 {
 			 e.printStackTrace();
-		 }
+		 }*/
+		 this.instructs = ins;
 		 this.lastInstr = this.instructs.get(this.instructs.size() - 1);
 		 int memTime = 0;
 		 this.instructionFetcher = new InstructionFetcher(iLevels, iAssoc,iLines, iPenalties, iInstructionsPerLine,instructs,memTime);
@@ -142,9 +131,7 @@ public class Bengo {
 			reservationStations[i].setWritten(false);
 	}
 	public void run()
-	{
-
-			
+	{	
 		//this.printReservationStations();
 		if(lastFetched.fetchTime == -1 && fetchPC != 0)
 			lastFetched.setFetchTime(CURRENT_CYCLE);
@@ -175,7 +162,6 @@ public class Bengo {
 		{
 			run();
 		}
-	
 	}
 	public void fetch()
 	{
@@ -221,10 +207,9 @@ public class Bengo {
 						if((!reservationStations[i].isBusy()) && (!this.reservationStations[i].isWritten) && 
 								(reservationStations[i].isCompatible(this.fetchedInstructions.get(issuePC).getType())))
 						{
-
 								// Reservation station found for load operation 
 								Instruction instr = (this.fetchedInstructions.get(issuePC));
-								lastInstr = instr;
+								lastIssued = instr;
 								instr.setIssueTime(CURRENT_CYCLE);
 								// assign to station
 								// create ROB ENTRY
@@ -274,14 +259,7 @@ public class Bengo {
 											reservationStations[i].setQj(registerStatus.getRegisterStation(instr.fields[2]));
 										}
 									}
-									
-									if(registerStatus.getRegisterStation(instr.fields[1]) == "")
-										//NO WAW
-										registerStatus.assignRegister(index + "", instr.fields[1]);
-									
 								}
-								
-							
 						}
 						issuePC++;
 						break;
@@ -483,10 +461,7 @@ public class Bengo {
 		{
 			//System.out.println(this.writeBack.get(0));
 			String rd = this.writeBack.get(0).instruction.fields[1];
-			Instruction instr = this.writeBack.get(0).instruction;
 			this.writeBack.get(0).instruction.setWrittenTime(CURRENT_CYCLE);
-			System.out.println("===================== writing back instruction =================");
-			System.out.println(this.writeBack.get(0));
 			if(!this.writeBack.get(0).instruction.isBranch())
 				this.dataBus.writeRegister(this.writeBack.get(0).instruction.fields[1],(short) this.writeBack.get(0).getAnswer());
 			if(this.writeBack.get(0).instruction.fields[0].equalsIgnoreCase("JALR"))
@@ -522,14 +497,12 @@ public class Bengo {
 					{
 						// not a number
 					}
-				
 			}
 		}
 		
 	}
 	public void flush()
 	{
-		System.err.println("SHED EL SEEEFOOON");
 		while(!this.fetchedInstructions.isEmpty())
 			this.fetchedInstructions.remove(0);
 		while(!this.issuedInstructions.isEmpty())
@@ -576,7 +549,10 @@ public class Bengo {
 					{
 						this.ROB.peak().instr.setCommit(CURRENT_CYCLE);
 						if(ROB.peak().instr == this.lastInstr)
+						{
 							this.done = true;
+						}
+							
 					//	this.ROB.dequeue();
 					}
 				}
@@ -584,7 +560,11 @@ public class Bengo {
 				{
 					this.ROB.peak().instr.setCommit(CURRENT_CYCLE);
 					if(ROB.peak().instr == this.lastInstr)
+					{
 						this.done = true;
+						
+					}
+						
 					this.registerFile.writeRegister(this.ROB.peak().dest,this.ROB.peak().val);
 					//this.ROB.dequeue();
 				}
@@ -613,14 +593,39 @@ public class Bengo {
 		//testRaw();
 		//testSkip();
 		//testIssueDelay();
-		testLoad();
+		//testLoad();
 	}
 	/*
 	 * This method loads instructions from the loop.txt file, the loop keeps on incrementing
 	 * the value of R2 until it reaches 4.
 	 */
+	public static ArrayList<Instruction> assemble(String fileName) {
+		Assembler assembler = new Assembler(fileName);
+		Instruction [] instructs;
+		ArrayList<Instruction> instructionList = new ArrayList<Instruction>();
+		try
+		{
+			if(assembler.assemble())
+			{
+				instructs = assembler.getProgram();
+				for(int i = 0; i < instructs.length; i++)
+					instructionList.add(instructs[i]);
+			}
+			else
+			{
+				System.err.println(assembler.getErrorMessage());
+				System.exit(0);
+			}
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+		}
+		return instructionList;
+	}
 	public static void testLoop()
 	{
+		ArrayList<Instruction> in = assemble("loop.txt");
 		int dLevels = 2;
 		int[] numWords = {8, 16};
 		int[] blockSizes =  {1,2};
@@ -633,7 +638,7 @@ public class Bengo {
 		int lines[] = new int[]{12,16,20};
 		int penalties[] = new int[]{2,4,6};
 		int instructionsPerLine[] = new int[]{2,4,8};
-		Bengo bengo = new Bengo("loop.txt",2,4,3,4,1,9,13,4, levels, assoc, lines, penalties,instructionsPerLine,dLevels,
+		Bengo bengo = new Bengo(in,2,4,3,4,1,9,13,4, levels, assoc, lines, penalties,instructionsPerLine,dLevels,
 				numWords,blockSizes,hitTimes,assocs,hitPolicies,missPolicies,50);
 		bengo.printFetchTime();
 		System.err.println("IPC = " + bengo.getIPC());
@@ -648,6 +653,7 @@ public class Bengo {
 	 */
 	public static void testArithmetic()
 	{
+		ArrayList<Instruction> in = assemble("arithmetic.txt");
 		int dLevels = 2;
 		int[] numWords = {8, 16};
 		int[] blockSizes =  {1,2};
@@ -660,7 +666,7 @@ public class Bengo {
 		int lines[] = new int[]{12,16,20};
 		int penalties[] = new int[]{2,4,6};
 		int instructionsPerLine[] = new int[]{2,4,8};
-		Bengo bengo = new Bengo("arithmetic.txt",2,4,3,4,1,9,13,1, levels, assoc, lines, penalties,instructionsPerLine,
+		Bengo bengo = new Bengo(in,2,4,3,4,1,9,13,1, levels, assoc, lines, penalties,instructionsPerLine,
 				dLevels, numWords,blockSizes,hitTimes,assocs,hitPolicies,missPolicies,50);
 		bengo.printFetchTime();
 		System.err.println("IPC = " + bengo.getIPC());
@@ -675,6 +681,7 @@ public class Bengo {
 	 */
 	public static void testRaw()
 	{
+		ArrayList<Instruction> in = assemble("raw.txt");
 		int dLevels = 2;
 		int[] numWords = {8, 16};
 		int[] blockSizes =  {1,2};
@@ -687,7 +694,7 @@ public class Bengo {
 		int lines[] = new int[]{12,16,20};
 		int penalties[] = new int[]{2,4,6};
 		int instructionsPerLine[] = new int[]{2,4,8};
-		Bengo bengo = new Bengo("raw.txt",2,2,4,12,1,1,1,4, levels, assoc, lines, penalties,instructionsPerLine,dLevels,
+		Bengo bengo = new Bengo(in,2,2,4,12,1,1,1,4, levels, assoc, lines, penalties,instructionsPerLine,dLevels,
 				numWords,blockSizes,hitTimes,assocs,hitPolicies,missPolicies,50);
 		bengo.printFetchTime();
 		System.err.println("IPC = " + bengo.getIPC());
@@ -701,6 +708,7 @@ public class Bengo {
 	 */
 	public static void testSkip()
 	{
+		ArrayList<Instruction> in = assemble("skip.txt");
 		int dLevels = 2;
 		int[] numWords = {8, 16};
 		int[] blockSizes =  {1,2};
@@ -713,7 +721,7 @@ public class Bengo {
 		int lines[] = new int[]{12,16,20};
 		int penalties[] = new int[]{2,4,6};
 		int instructionsPerLine[] = new int[]{2,4,8};
-		Bengo bengo = new Bengo("skip.txt",2,2,8,6,3,11,15,4, levels, assoc, lines, penalties,instructionsPerLine,dLevels, numWords,blockSizes,hitTimes,assocs,hitPolicies,missPolicies,50);
+		Bengo bengo = new Bengo(in,2,2,8,6,3,11,15,4, levels, assoc, lines, penalties,instructionsPerLine,dLevels, numWords,blockSizes,hitTimes,assocs,hitPolicies,missPolicies,50);
 		bengo.printFetchTime();
 		System.err.println("IPC = " + bengo.getIPC());
 		System.err.println("CYCLES SPANNED = " + (CURRENT_CYCLE - 1));
@@ -727,6 +735,7 @@ public class Bengo {
 	 */
 	public static void testIssueDelay()
 	{
+		ArrayList<Instruction> in = assemble("issue.txt");
 		int dLevels = 2;
 		int[] numWords = {8, 16};
 		int[] blockSizes =  {1,2};
@@ -739,7 +748,7 @@ public class Bengo {
 		int lines[] = new int[]{12,16,20};
 		int penalties[] = new int[]{2,4,6};
 		int instructionsPerLine[] = new int[]{2,4,8};
-		Bengo bengo = new Bengo("weird.txt",2,2,1,6,3,11,15,4, levels, assoc, lines, penalties,instructionsPerLine,dLevels, numWords,blockSizes,hitTimes,assocs,hitPolicies,missPolicies,50);
+		Bengo bengo = new Bengo(in,2,2,1,6,3,11,15,4, levels, assoc, lines, penalties,instructionsPerLine,dLevels, numWords,blockSizes,hitTimes,assocs,hitPolicies,missPolicies,50);
 		bengo.printFetchTime();
 		System.err.println("IPC = " + bengo.getIPC());
 		System.err.println("CYCLES SPANNED = " + (CURRENT_CYCLE - 1));
@@ -749,7 +758,7 @@ public class Bengo {
 	}
 	public static void testLoad()
 	{
-		
+		ArrayList<Instruction> in = assemble("load.txt");
 		int dLevels = 2;
 		int[] numWords = {8, 16};
 		int[] blockSizes =  {1,2};
@@ -762,9 +771,8 @@ public class Bengo {
 		int lines[] = new int[]{12,16,20};
 		int penalties[] = new int[]{2,4,6};
 		int instructionsPerLine[] = new int[]{2,4,8};
-		Bengo bengo = new Bengo("load.txt",2,2,1,6,3,11,15,4, levels, assoc, lines, penalties,instructionsPerLine,dLevels, numWords,blockSizes,hitTimes,assocs,hitPolicies,missPolicies,50);
+		Bengo bengo = new Bengo(in,2,2,1,6,3,11,15,4, levels, assoc, lines, penalties,instructionsPerLine,dLevels, numWords,blockSizes,hitTimes,assocs,hitPolicies,missPolicies,50);
 		bengo.bengoData.write(7,(short) 2, true);
-		
 		bengo.printFetchTime();
 		System.err.println("IPC = " + bengo.getIPC());
 		System.err.println("CYCLES SPANNED = " + (CURRENT_CYCLE - 1));
