@@ -120,7 +120,6 @@ public class Bengo {
 		 this.lastFetched = (Instruction) fetched[1];
 		 this.fetchedCounter++;
 		 fetchPC++;
-		 this.run();
 		 
 		
 	}
@@ -199,7 +198,6 @@ public class Bengo {
 	{
 		if(lastIssued != null)
 			this.issuedInstructions.add(lastIssued);
-		System.out.println("ISSUE PC IS " + this.issuePC);
 		if(this.fetchedInstructions.size() > issuePC && issuePC >= 0)
 		{
 			System.out.println("ISSUING " + this.fetchedInstructions.get(issuePC) );
@@ -601,12 +599,43 @@ public class Bengo {
 	
 	public static void main(String[] abbas) {
 		
-		testLoop();
+		test("load.txt");
+//		testLoop();
 		//testArithmetic();
 		//testRaw();
 		//testSkip();
 		//testIssueDelay();
 		//testLoad();
+	}
+	
+	public static void test(String fileName)
+	{
+		ArrayList<Instruction> in = assemble(fileName);
+		int dLevels = 2;
+		int[] numWords = {8, 16};
+		int[] blockSizes =  {1,2};
+		int[] hitTimes =  {10, 20};
+		int[] assocs =  {1, 2};
+		int[] hitPolicies =  {0,0};
+		int[] missPolicies = {1,1};
+		int levels = 3;
+		int assoc[] = new int[]{2,4,4};
+		int lines[] = new int[]{12,16,20};
+		int penalties[] = new int[]{2,4,6};
+		int instructionsPerLine[] = new int[]{2,4,8};
+		Bengo bengo = new Bengo(in,2,2,1,6,3,11,15,4, levels, assoc, lines, penalties,instructionsPerLine,dLevels, numWords,blockSizes,hitTimes,assocs,hitPolicies,missPolicies,50,50);
+		bengo.bengoData.write(7, (short)77, true);
+		System.out.println(bengo.bengoData.mem);
+		bengo.run();
+		bengo.printFetchTime();
+		System.err.println("IPC = " + bengo.getIPC());
+		System.err.println("CYCLES SPANNED = " + (CURRENT_CYCLE - 1));
+		double[] iCacheHitRate = bengo.instructionFetcher.getHitRatio();
+		for(int i = 0; i < iCacheHitRate.length; i++)
+			System.err.println("HIT RATIO FOR CACHE LEVEL " + i + " = " + iCacheHitRate[i]);
+		bengo.bengoData.printRatios();
+		bengo.dataBus.printRegisters();
+		System.out.println(bengo.bengoData.mem);
 	}
 	/*
 	 * This method loads instructions from the loop.txt file, the loop keeps on incrementing
@@ -653,6 +682,7 @@ public class Bengo {
 		int instructionsPerLine[] = new int[]{2,4,8};
 		Bengo bengo = new Bengo(in,2,4,3,4,1,9,13,4, levels, assoc, lines, penalties,instructionsPerLine,dLevels,
 				numWords,blockSizes,hitTimes,assocs,hitPolicies,missPolicies,50,50);
+		bengo.run();
 		bengo.printFetchTime();
 		System.err.println("IPC = " + bengo.getIPC());
 		System.err.println("CYCLES SPANNED = " + (CURRENT_CYCLE - 1));
@@ -681,6 +711,7 @@ public class Bengo {
 		int instructionsPerLine[] = new int[]{2,4,8};
 		Bengo bengo = new Bengo(in,2,4,3,4,1,9,13,1, levels, assoc, lines, penalties,instructionsPerLine,
 				dLevels, numWords,blockSizes,hitTimes,assocs,hitPolicies,missPolicies,50,50);
+		bengo.run();
 		bengo.printFetchTime();
 		System.err.println("IPC = " + bengo.getIPC());
 		System.err.println("CYCLES SPANNED = " + (CURRENT_CYCLE - 1));
@@ -709,6 +740,7 @@ public class Bengo {
 		int instructionsPerLine[] = new int[]{2,4,8};
 		Bengo bengo = new Bengo(in,2,2,4,12,1,1,1,4, levels, assoc, lines, penalties,instructionsPerLine,dLevels,
 				numWords,blockSizes,hitTimes,assocs,hitPolicies,missPolicies,50,50);
+		bengo.run();
 		bengo.printFetchTime();
 		System.err.println("IPC = " + bengo.getIPC());
 		System.err.println("CYCLES SPANNED = " + (CURRENT_CYCLE - 1));
@@ -735,6 +767,7 @@ public class Bengo {
 		int penalties[] = new int[]{2,4,6};
 		int instructionsPerLine[] = new int[]{2,4,8};
 		Bengo bengo = new Bengo(in,2,2,8,6,3,11,15,4, levels, assoc, lines, penalties,instructionsPerLine,dLevels, numWords,blockSizes,hitTimes,assocs,hitPolicies,missPolicies,50,50);
+		bengo.run();
 		bengo.printFetchTime();
 		System.err.println("IPC = " + bengo.getIPC());
 		System.err.println("CYCLES SPANNED = " + (CURRENT_CYCLE - 1));
@@ -762,6 +795,7 @@ public class Bengo {
 		int penalties[] = new int[]{2,4,6};
 		int instructionsPerLine[] = new int[]{2,4,8};
 		Bengo bengo = new Bengo(in,2,2,1,6,3,11,15,4, levels, assoc, lines, penalties,instructionsPerLine,dLevels, numWords,blockSizes,hitTimes,assocs,hitPolicies,missPolicies,50,50);
+		bengo.run();
 		bengo.printFetchTime();
 		System.err.println("IPC = " + bengo.getIPC());
 		System.err.println("CYCLES SPANNED = " + (CURRENT_CYCLE - 1));
@@ -786,6 +820,7 @@ public class Bengo {
 		int instructionsPerLine[] = new int[]{2,4,8};
 		Bengo bengo = new Bengo(in,2,2,1,6,3,11,15,4, levels, assoc, lines, penalties,instructionsPerLine,dLevels, numWords,blockSizes,hitTimes,assocs,hitPolicies,missPolicies,50,50);
 		bengo.bengoData.write(7,(short) 2, true);
+		bengo.run();
 		bengo.printFetchTime();
 		System.err.println("IPC = " + bengo.getIPC());
 		System.err.println("CYCLES SPANNED = " + (CURRENT_CYCLE - 1));
