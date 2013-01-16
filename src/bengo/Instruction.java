@@ -19,7 +19,7 @@ public class Instruction {
 	}
 	
 	public Instruction(String []instructionStr, int address) {
-		System.out.println(instructionStr.length);
+		//System.out.println(instructionStr.length);
 		fields = new String[]{instructionStr.length >= 0 ? instructionStr[0] : null ,
 				instructionStr.length > 1 ? instructionStr[1] : null,
 				instructionStr.length > 2 ? instructionStr[2] : null,
@@ -108,7 +108,6 @@ public class Instruction {
 	{
 		
 		this.writeTime = time;
-		System.err.println("WRITING INSTRUCTION : " + this.toString());
 	}
 	public String toString()
 	{

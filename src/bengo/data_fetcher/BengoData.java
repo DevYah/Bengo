@@ -1,6 +1,5 @@
 package bengo.data_fetcher;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -12,15 +11,16 @@ public class BengoData {
 	 */
 
 	int levels;
-	private Cache[] caches;
-	private Memory mem;
+	public Cache[] caches;
+	public Memory mem;
 
 	public BengoData(int levels, int[] sizes, int[]lineSizes,
 					int[] hitTimes, int[] assocs, int[] hitPolicies,
-					int[] missPolicies) {
+					int[] missPolicies, int memHitTime) {
 
 		this.levels = levels;
 		caches = new Cache[levels];
+		this.mem = new Memory(memHitTime);
 
 		// notes that blockSizes must be in an increasing order
 		if (levels >= 1)
@@ -87,8 +87,8 @@ public class BengoData {
 	public DataAction write(int address, short word, boolean instant) {
 		if (instant == true) {
 			mem.write(address, word);
-			for (int i = 0; i < caches.length; i++)
-				caches[i].write(address, caches[i].compatibleBlock(address, word, mem), true);
+			//for (int i = 0; i < caches.length; i++)
+				//caches[i].write(address, caches[i].compatibleBlock(address, word, mem), true);
 			return null;
 		}
 		ArrayList<WriteAction> writes;
@@ -201,6 +201,11 @@ public class BengoData {
 //					word, writes, new ArrayList<ReadAction>());
 		return writes;
 	}
+	
+	public void printRatios(){
+		for (int i = 0; i < levels; i++)
+			System.out.println(caches[i].name + "  Hit Ratio: " + caches[i].getHitRatio() + "   Miss Ratio: " + caches[i].getMissRatio());
+	}
 
 	// test reading and write hit
 	public static void test1() {
@@ -212,7 +217,7 @@ public class BengoData {
 		int[] hitPolicies =  {0,0};
 		int[] missPolicies = {1,1};
 		BengoData d = new BengoData(levels, numWords, blockSizes,
-									hitTimes, assocs, hitPolicies, missPolicies);
+									hitTimes, assocs, hitPolicies, missPolicies,50);
 
 		Memory mem = new Memory(50);
 		mem.write(0, (short)99);
@@ -288,14 +293,13 @@ public class BengoData {
 		int[] hitPolicies =  {Cache.WRITE_THROUGH, Cache.WRITE_THROUGH};
 		int[] missPolicies = {Cache.WRITE_ALLOCATE, Cache.WRITE_ALLOCATE};
 		BengoData d = new BengoData(levels, numWords, blockSizes,
-									hitTimes, assocs, hitPolicies, missPolicies);
-		Memory mem = new Memory(50);
-		d.mem = mem;
+									hitTimes, assocs, hitPolicies, missPolicies,50);
+
 
 		System.out.println(d.caches[0]);
 		System.out.println("-------------------------");
 		System.out.println(d.caches[1]);
-		System.out.println(mem);
+		System.out.println(d.mem);
 		
 		DataAction action = d.write(18, (short)88);
 		for (int i = 0; i < 90; i++) {
@@ -316,15 +320,14 @@ public class BengoData {
 		int[] hitPolicies =  {Cache.WRITE_BACK, Cache.WRITE_BACK};
 		int[] missPolicies = {Cache.WRITE_ALLOCATE, Cache.WRITE_ALLOCATE};
 		BengoData d = new BengoData(levels, numWords, blockSizes,
-									hitTimes, assocs, hitPolicies, missPolicies);
-		Memory mem = new Memory(50);
-		d.mem = mem;
-		mem.write(2, (short)22);
+									hitTimes, assocs, hitPolicies, missPolicies,50);
+
+		d.mem.write(2, (short)22);
 		
 		System.out.println(d.caches[0]);
 		System.out.println("-------------------------");
 		System.out.println(d.caches[1]);
-		System.out.println(mem);
+		System.out.println(d.mem);
 		
 		
 		System.out.println("\n\n---------\n\n");
