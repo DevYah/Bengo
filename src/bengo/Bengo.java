@@ -229,9 +229,11 @@ public class Bengo {
 								reservationStations[i].setOperation(instr.getType());
 								if(instr.fields[0].equalsIgnoreCase("LW"))
 								{
+									System.out.println(("THE BASE REGISTER IS " + instr.fields[2]));
+									System.out.println("register status field is " + this.registerStatus.getRegisterStation(instr.fields[2]));
 									DataAction readAction = this.bengoData.read(this.dataBus.getRegisterValue(instr.fields[2]) + Integer.parseInt(instr.fields[3]));
 									int delay = readAction.getNeededCycles();
-									this.reservationStations[i].setDataAction(readAction);
+								//	this.reservationStations[i].setDataAction(readAction);
 									reservationStations[i].assignInstruction(instr, delay);
 									if(instr.fields[2] != null)
 									{
@@ -242,7 +244,9 @@ public class Bengo {
 										}
 										else
 										{
+											System.out.println("RAW HAZARD FOUND");
 											reservationStations[i].setQj(registerStatus.getRegisterStation(instr.fields[2]));
+											System.out.println("RESERVATION STATION : " + reservationStations[i]);
 										}
 									}
 									
@@ -255,7 +259,7 @@ public class Bengo {
 								{
 									DataAction writeAction = this.bengoData.write(this.dataBus.getRegisterValue(instr.fields[2]) + Integer.parseInt(instr.fields[3]), this.dataBus.getRegisterValue(instr.fields[1]));
 									int delay = writeAction.getNeededCycles();
-									this.reservationStations[i].setDataAction(writeAction);
+								//	this.reservationStations[i].setDataAction(writeAction);
 									reservationStations[i].assignInstruction(instr, delay);
 									if(instr.fields[2] != null)
 									{
@@ -396,8 +400,29 @@ public class Bengo {
 		//loop on all reservation Stations
 		for(int i = 0; i < this.reservationStations.length; i++)
 		{
+			if(reservationStations[i].name.contains("LOAD"))
+			System.out.println("RESERVATION STATION " + reservationStations[i] + " TRYING TO EXECUTE");
 			if((reservationStations[i].isBusy()) && ((reservationStations[i].qj == "") || (reservationStations[i].qj == null)) && ((reservationStations[i].qk == "") || (reservationStations[i].qk == null) ))
 			{
+				if(reservationStations[i].name.contains("LOAD"))
+				{
+					if(reservationStations[i].dataAction == null)
+					{
+						if(reservationStations[i].instruction.fields[0].equalsIgnoreCase("LW"))
+						{
+							DataAction readAction = this.bengoData.read(this.dataBus.getRegisterValue(reservationStations[i].instruction.fields[2]) + Integer.parseInt(reservationStations[i].instruction.fields[3]));
+							reservationStations[i].setDataAction(readAction);
+							System.out.println("EXECUTING " + " WITH REGISTER VALUE " + this.dataBus.getRegisterValue(reservationStations[i].instruction.fields[2]));
+						}
+						else
+						{
+							DataAction writeAction = this.bengoData.write(this.dataBus.getRegisterValue(reservationStations[i].instruction.fields[2]) + Integer.parseInt(reservationStations[i].instruction.fields[3]), this.dataBus.getRegisterValue(reservationStations[i].instruction.fields[1]));
+							reservationStations[i].setDataAction(writeAction);
+							
+						}
+						
+					}
+				}
 				// Step a cycle
 				if(reservationStations[i].isFinished())
 				{
@@ -599,7 +624,7 @@ public class Bengo {
 	
 	public static void main(String[] abbas) {
 		
-		test("load.txt");
+		test("RAWwrongBehavior.txt");
 //		testLoop();
 		//testArithmetic();
 		//testRaw();

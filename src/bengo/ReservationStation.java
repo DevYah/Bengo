@@ -34,6 +34,7 @@ public class ReservationStation {
 	public void setDataAction(DataAction dataAction)
 	{
 		this.dataAction = dataAction;
+		System.err.println(this.dataAction.address);
 	}
 	public void setWritten(boolean written)
 	{
