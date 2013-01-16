@@ -599,7 +599,7 @@ public class Bengo {
 	
 	public static void main(String[] abbas) {
 		
-		test("load.txt");
+		test("koko.txt");
 //		testLoop();
 		//testArithmetic();
 		//testRaw();
