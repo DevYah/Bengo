@@ -1,0 +1,4 @@
+ADDI R2, R2, 2
+LW R1, R2, 7
+LW R1, R2, 7
+ADDI R0, R1, 2
