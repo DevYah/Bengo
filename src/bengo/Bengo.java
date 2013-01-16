@@ -129,6 +129,13 @@ public class Bengo {
 		for(int i = 0; i < this.reservationStations.length;i++)
 			reservationStations[i].setWritten(false);
 	}
+	public boolean reservationStationBusy()
+	{
+		for(int i = 0; i < this.reservationStations.length; i++)
+			if(this.reservationStations[i].busy)
+				return true;
+		return false;
+	}
 	public void run()
 	{	
 		//this.printReservationStations();
@@ -157,7 +164,7 @@ public class Bengo {
 		for(int i = 0; i < this.reservationStations.length;i++)
 			this.reservationStations[i].update();
 	//	this.printFetchTime();
-		if(!done)
+		if((!done))
 		{
 			run();
 		}
@@ -192,20 +199,26 @@ public class Bengo {
 	{
 		if(lastIssued != null)
 			this.issuedInstructions.add(lastIssued);
+		System.out.println("ISSUE PC IS " + this.issuePC);
 		if(this.fetchedInstructions.size() > issuePC && issuePC >= 0)
 		{
+			System.out.println("ISSUING " + this.fetchedInstructions.get(issuePC) );
 			if(this.ROB.hasSpace())
 			{
+				System.out.println("ROB HAS SPACE");
 				int instrDelay = 0;
 				for(int i = 0; i < reservationStations.length; i++)
 				{
 					if(this.fetchedInstructions.get(issuePC).getType() == "LOAD")
 					{
 						// LOAD INSTRUCTION ISSUE LOGIC HERE.
+
 						//instrDelay = this.loadTime;
+						System.out.println("Station  " + i + " " + this.reservationStations[i]);
 						if((!reservationStations[i].isBusy()) && (!this.reservationStations[i].isWritten) && 
 								(reservationStations[i].isCompatible(this.fetchedInstructions.get(issuePC).getType())))
 						{
+							System.out.println("FOUND A LOAD RESERVATION STATION ");
 								// Reservation station found for load operation 
 								Instruction instr = (this.fetchedInstructions.get(issuePC));
 								lastIssued = instr;
@@ -259,9 +272,10 @@ public class Bengo {
 										}
 									}
 								}
+								issuePC++;
+								break;
 						}
-						issuePC++;
-						break;
+						
 					}
 					else
 					{
@@ -624,7 +638,7 @@ public class Bengo {
 	}
 	public static void testLoop()
 	{
-		ArrayList<Instruction> in = assemble("loop.txt");
+		ArrayList<Instruction> in = assemble("errorProgram.txt");
 		int dLevels = 2;
 		int[] numWords = {8, 16};
 		int[] blockSizes =  {1,2};
