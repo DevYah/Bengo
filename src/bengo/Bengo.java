@@ -51,7 +51,7 @@ public class Bengo {
 			int divideTime, int ROBSize, int iLevels, int[]iAssoc, int[]iLines,int[] iPenalties,
 			int[] iInstructionsPerLine,
 			int dLevels, int[] dSizes, int[] dLineSizes, int[] dHitTimes, int[] dAssoc,
-			int[] dHit, int[] dMiss, int memoryHitTime)
+			int[] dHit, int[] dMiss, int memoryHitTime, int memTime)
 	{
 		this.bengoData = new BengoData(dLevels,dSizes,dLineSizes,dHitTimes,dAssoc,dHit,dMiss,memoryHitTime);
 		this.loadStations = loadStations;
@@ -114,7 +114,6 @@ public class Bengo {
 		 }*/
 		 this.instructs = ins;
 		 this.lastInstr = this.instructs.get(this.instructs.size() - 1);
-		 int memTime = 0;
 		 this.instructionFetcher = new InstructionFetcher(iLevels, iAssoc,iLines, iPenalties, iInstructionsPerLine,instructs,memTime);
 		 Object[] fetched = this.instructionFetcher.fetchInstruction(fetchPC);
 		 this.remainingFetchDelay = ((Integer) fetched[0]);
@@ -588,7 +587,7 @@ public class Bengo {
 	
 	public static void main(String[] abbas) {
 		
-		//testLoop();
+		testLoop();
 		//testArithmetic();
 		//testRaw();
 		//testSkip();
@@ -639,7 +638,7 @@ public class Bengo {
 		int penalties[] = new int[]{2,4,6};
 		int instructionsPerLine[] = new int[]{2,4,8};
 		Bengo bengo = new Bengo(in,2,4,3,4,1,9,13,4, levels, assoc, lines, penalties,instructionsPerLine,dLevels,
-				numWords,blockSizes,hitTimes,assocs,hitPolicies,missPolicies,50);
+				numWords,blockSizes,hitTimes,assocs,hitPolicies,missPolicies,50,50);
 		bengo.printFetchTime();
 		System.err.println("IPC = " + bengo.getIPC());
 		System.err.println("CYCLES SPANNED = " + (CURRENT_CYCLE - 1));
@@ -667,7 +666,7 @@ public class Bengo {
 		int penalties[] = new int[]{2,4,6};
 		int instructionsPerLine[] = new int[]{2,4,8};
 		Bengo bengo = new Bengo(in,2,4,3,4,1,9,13,1, levels, assoc, lines, penalties,instructionsPerLine,
-				dLevels, numWords,blockSizes,hitTimes,assocs,hitPolicies,missPolicies,50);
+				dLevels, numWords,blockSizes,hitTimes,assocs,hitPolicies,missPolicies,50,50);
 		bengo.printFetchTime();
 		System.err.println("IPC = " + bengo.getIPC());
 		System.err.println("CYCLES SPANNED = " + (CURRENT_CYCLE - 1));
@@ -695,7 +694,7 @@ public class Bengo {
 		int penalties[] = new int[]{2,4,6};
 		int instructionsPerLine[] = new int[]{2,4,8};
 		Bengo bengo = new Bengo(in,2,2,4,12,1,1,1,4, levels, assoc, lines, penalties,instructionsPerLine,dLevels,
-				numWords,blockSizes,hitTimes,assocs,hitPolicies,missPolicies,50);
+				numWords,blockSizes,hitTimes,assocs,hitPolicies,missPolicies,50,50);
 		bengo.printFetchTime();
 		System.err.println("IPC = " + bengo.getIPC());
 		System.err.println("CYCLES SPANNED = " + (CURRENT_CYCLE - 1));
@@ -721,7 +720,7 @@ public class Bengo {
 		int lines[] = new int[]{12,16,20};
 		int penalties[] = new int[]{2,4,6};
 		int instructionsPerLine[] = new int[]{2,4,8};
-		Bengo bengo = new Bengo(in,2,2,8,6,3,11,15,4, levels, assoc, lines, penalties,instructionsPerLine,dLevels, numWords,blockSizes,hitTimes,assocs,hitPolicies,missPolicies,50);
+		Bengo bengo = new Bengo(in,2,2,8,6,3,11,15,4, levels, assoc, lines, penalties,instructionsPerLine,dLevels, numWords,blockSizes,hitTimes,assocs,hitPolicies,missPolicies,50,50);
 		bengo.printFetchTime();
 		System.err.println("IPC = " + bengo.getIPC());
 		System.err.println("CYCLES SPANNED = " + (CURRENT_CYCLE - 1));
@@ -748,7 +747,7 @@ public class Bengo {
 		int lines[] = new int[]{12,16,20};
 		int penalties[] = new int[]{2,4,6};
 		int instructionsPerLine[] = new int[]{2,4,8};
-		Bengo bengo = new Bengo(in,2,2,1,6,3,11,15,4, levels, assoc, lines, penalties,instructionsPerLine,dLevels, numWords,blockSizes,hitTimes,assocs,hitPolicies,missPolicies,50);
+		Bengo bengo = new Bengo(in,2,2,1,6,3,11,15,4, levels, assoc, lines, penalties,instructionsPerLine,dLevels, numWords,blockSizes,hitTimes,assocs,hitPolicies,missPolicies,50,50);
 		bengo.printFetchTime();
 		System.err.println("IPC = " + bengo.getIPC());
 		System.err.println("CYCLES SPANNED = " + (CURRENT_CYCLE - 1));
@@ -771,7 +770,7 @@ public class Bengo {
 		int lines[] = new int[]{12,16,20};
 		int penalties[] = new int[]{2,4,6};
 		int instructionsPerLine[] = new int[]{2,4,8};
-		Bengo bengo = new Bengo(in,2,2,1,6,3,11,15,4, levels, assoc, lines, penalties,instructionsPerLine,dLevels, numWords,blockSizes,hitTimes,assocs,hitPolicies,missPolicies,50);
+		Bengo bengo = new Bengo(in,2,2,1,6,3,11,15,4, levels, assoc, lines, penalties,instructionsPerLine,dLevels, numWords,blockSizes,hitTimes,assocs,hitPolicies,missPolicies,50,50);
 		bengo.bengoData.write(7,(short) 2, true);
 		bengo.printFetchTime();
 		System.err.println("IPC = " + bengo.getIPC());
