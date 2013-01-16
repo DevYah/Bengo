@@ -7,7 +7,6 @@
 *.xml
 *.mf
 *.properties
-*.form
 .classpath
 .project
 .settings/*
