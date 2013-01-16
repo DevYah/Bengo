@@ -7,7 +7,7 @@ import bengo.Bengo;
 public class DataAction {
 	int startCycle;
 	int neededCyles;
-	int address; // memory address
+	public int address; // memory address
 	short word;
 
 	ArrayList<WriteAction> writes;
