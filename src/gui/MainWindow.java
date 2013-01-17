@@ -166,6 +166,7 @@ public class MainWindow extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Bengo RISC Simulator");
+        setPreferredSize(new java.awt.Dimension(720, 523));
 
         jLabel10.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         jLabel10.setText("Data Cache Levels");
@@ -886,11 +887,10 @@ public class MainWindow extends javax.swing.JFrame {
                                 .addComponent(jLabel10)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(jSpinner1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addGroup(jPanel1Layout.createSequentialGroup()
-                                    .addGap(18, 18, 18)
-                                    .addComponent(jLabel24, javax.swing.GroupLayout.PREFERRED_SIZE, 389, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addGap(18, 18, 18)
+                                .addComponent(jLabel24, javax.swing.GroupLayout.PREFERRED_SIZE, 389, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addContainerGap())))
         );
         jPanel1Layout.setVerticalGroup(
@@ -910,7 +910,7 @@ public class MainWindow extends javax.swing.JFrame {
                 .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, 162, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 31, Short.MAX_VALUE)
                 .addComponent(jLabel24, javax.swing.GroupLayout.PREFERRED_SIZE, 0, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(11, 11, 11))
         );
@@ -942,19 +942,19 @@ public class MainWindow extends javax.swing.JFrame {
         jLayeredPane1.add(jLabel58, javax.swing.JLayeredPane.DEFAULT_LAYER);
 
         jTextField17.setText("0");
-        jTextField17.setBounds(620, 330, 30, 20);
+        jTextField17.setBounds(690, 330, 30, 20);
         jLayeredPane1.add(jTextField17, javax.swing.JLayeredPane.DEFAULT_LAYER);
 
         jTextField18.setText("0");
-        jTextField18.setBounds(620, 360, 30, 20);
+        jTextField18.setBounds(690, 360, 30, 20);
         jLayeredPane1.add(jTextField18, javax.swing.JLayeredPane.DEFAULT_LAYER);
 
         jLabel59.setText("value");
-        jLabel59.setBounds(570, 360, 26, 14);
+        jLabel59.setBounds(570, 360, 90, 20);
         jLayeredPane1.add(jLabel59, javax.swing.JLayeredPane.DEFAULT_LAYER);
 
         jLabel60.setText("address");
-        jLabel60.setBounds(570, 330, 38, 14);
+        jLabel60.setBounds(570, 330, 90, 20);
         jLayeredPane1.add(jLabel60, javax.swing.JLayeredPane.DEFAULT_LAYER);
 
         jButton1.setText("Add");
@@ -963,7 +963,7 @@ public class MainWindow extends javax.swing.JFrame {
                 jButton1MouseReleased(evt);
             }
         });
-        jButton1.setBounds(660, 330, 73, 50);
+        jButton1.setBounds(650, 390, 73, 20);
         jLayeredPane1.add(jButton1, javax.swing.JLayeredPane.DEFAULT_LAYER);
 
         jButton2.setText("Run");
@@ -972,53 +972,53 @@ public class MainWindow extends javax.swing.JFrame {
                 jButton2MouseReleased(evt);
             }
         });
-        jButton2.setBounds(491, 380, 60, 50);
+        jButton2.setBounds(490, 360, 60, 50);
         jLayeredPane1.add(jButton2, javax.swing.JLayeredPane.DEFAULT_LAYER);
         jLabel61.setBounds(30, 380, 400, 0);
         jLayeredPane1.add(jLabel61, javax.swing.JLayeredPane.DEFAULT_LAYER);
 
         jLabel27.setText("Total Execution Time");
-        jLabel27.setBounds(30, 460, 110, 14);
+        jLabel27.setBounds(20, 434, 140, 20);
         jLayeredPane1.add(jLabel27, javax.swing.JLayeredPane.DEFAULT_LAYER);
 
         jLabel41.setText(" ");
-        jLabel41.setBounds(140, 460, 50, 20);
+        jLabel41.setBounds(20, 460, 90, 20);
         jLayeredPane1.add(jLabel41, javax.swing.JLayeredPane.DEFAULT_LAYER);
 
         jLabel47.setText("IPC");
-        jLabel47.setBounds(230, 460, 17, 14);
+        jLabel47.setBounds(170, 434, 60, 20);
         jLayeredPane1.add(jLabel47, javax.swing.JLayeredPane.DEFAULT_LAYER);
 
         jLabel48.setText("Hit ratios");
-        jLabel48.setBounds(330, 460, 60, 14);
+        jLabel48.setBounds(270, 440, 60, 14);
         jLayeredPane1.add(jLabel48, javax.swing.JLayeredPane.DEFAULT_LAYER);
 
         jLabel54.setText("L1");
-        jLabel54.setBounds(390, 460, 30, 14);
+        jLabel54.setBounds(360, 440, 30, 14);
         jLayeredPane1.add(jLabel54, javax.swing.JLayeredPane.DEFAULT_LAYER);
 
         jLabel55.setText(" ");
-        jLabel55.setBounds(430, 460, 40, 14);
+        jLabel55.setBounds(370, 460, 40, 14);
         jLayeredPane1.add(jLabel55, javax.swing.JLayeredPane.DEFAULT_LAYER);
 
         jLabel62.setText("L2");
-        jLabel62.setBounds(470, 460, 30, 14);
+        jLabel62.setBounds(440, 440, 30, 14);
         jLayeredPane1.add(jLabel62, javax.swing.JLayeredPane.DEFAULT_LAYER);
 
         jLabel63.setText(" ");
-        jLabel63.setBounds(500, 460, 50, 14);
+        jLabel63.setBounds(450, 460, 60, 20);
         jLayeredPane1.add(jLabel63, javax.swing.JLayeredPane.DEFAULT_LAYER);
 
         jLabel64.setText("L3");
-        jLabel64.setBounds(550, 460, 30, 14);
+        jLabel64.setBounds(510, 440, 30, 14);
         jLayeredPane1.add(jLabel64, javax.swing.JLayeredPane.DEFAULT_LAYER);
 
         jLabel65.setText(" ");
-        jLabel65.setBounds(590, 460, 30, 20);
+        jLabel65.setBounds(520, 460, 70, 20);
         jLayeredPane1.add(jLabel65, javax.swing.JLayeredPane.DEFAULT_LAYER);
 
         jLabel66.setText(" ");
-        jLabel66.setBounds(260, 460, 40, 20);
+        jLabel66.setBounds(160, 460, 80, 20);
         jLayeredPane1.add(jLabel66, javax.swing.JLayeredPane.DEFAULT_LAYER);
 
         jLabel67.setText(" ");
@@ -1029,11 +1029,11 @@ public class MainWindow extends javax.swing.JFrame {
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jLayeredPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 1129, Short.MAX_VALUE)
+            .addComponent(jLayeredPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 800, Short.MAX_VALUE)
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jLayeredPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 470, Short.MAX_VALUE)
+            .addComponent(jLayeredPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 495, Short.MAX_VALUE)
         );
 
         jTabbedPane1.addTab("Program", jPanel2);
@@ -1233,15 +1233,17 @@ public class MainWindow extends javax.swing.JFrame {
            
        }
        bengo = new Bengo(inst,loadSt,loadP,addSt,addP,multSt,multP,divP,rob,iLevels,iAssoc,iLines,iPs,iLs,dLevels,dS,dLs,dHitTimes,dMs,hps,mps,memTime,memTime);
-       String mem = jTextArea2.getText();
+       String mem = jTextArea2.getText().trim();
        String [] lines = mem.split("\\r?\\n");
-       for(int i=0;i<lines.length;i++){
+       System.out.println(lines[0]);
+       for(int i=0;i<lines.length && lines.length==2;i++){
            String s = lines[i].trim();
            String [] couple = s.split(":");
            int add = Integer.parseInt(couple[0].trim());
            int val = Integer.parseInt(couple[1].trim());
            bengo.bengoData.mem.write(add,(short)val);
        }
+       bengo.CURRENT_CYCLE = 0;
        bengo.run();
        jLabel66.setText(bengo.getIPC()+"");
        jLabel41.setText((bengo.CURRENT_CYCLE - 1)+"");
@@ -1252,8 +1254,23 @@ public class MainWindow extends javax.swing.JFrame {
            jLabel63.setText(iCacheHitRate[1]+"");
        if(x > 2)
            jLabel65.setText(iCacheHitRate[2]+"");
-    }//GEN-LAST:event_jButton2MouseReleased
+        bengo.printFetchTime();
 
+    System.err.println("IPC = " + bengo.getIPC());
+
+    System.err.println("CYCLES SPANNED = " + (bengo.CURRENT_CYCLE - 1));
+
+    for(int i = 0; i < iCacheHitRate.length; i++)
+
+    System.err.println("HIT RATIO FOR CACHE LEVEL " + i + " = " + iCacheHitRate[i]);
+
+    bengo.bengoData.printRatios();
+
+    bengo.dataBus.printRegisters();
+
+    System.out.println(bengo.bengoData.mem);
+    }//GEN-LAST:event_jButton2MouseReleased
+    
     /**
     * @param args the command line arguments
     */

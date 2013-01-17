@@ -32,7 +32,7 @@ public class Bengo {
 	int ROBSize = 4;
 	RegisterStatus registerStatus = new RegisterStatus();
 	ArrayList<ReservationStation> writeBack;
-	CDB dataBus;
+	public CDB dataBus;
 	Instruction lastInstr;
 	boolean done = false;
 	RegisterFile registerFile;
