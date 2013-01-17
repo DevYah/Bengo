@@ -40,12 +40,12 @@ public class Bengo {
 	
 
 	// 	ROB, Reservation Station, Instruction, Cache & Memory
-	BengoData bengoData;
+	public BengoData bengoData;
 	ArrayList<Instruction> instructs;
 	ReservationStation[] reservationStations;
 	ArrayList<Instruction> fetchedInstructions;
 	ArrayList<Instruction> issuedInstructions;
-	InstructionFetcher instructionFetcher;
+	public InstructionFetcher instructionFetcher;
 
 	public Bengo(ArrayList<Instruction> ins, int loadStations, int loadTime,
 			int addStations, int addTime, int multStations, int multTime,
@@ -624,7 +624,6 @@ public class Bengo {
 	}
 	
 	public static void main(String[] abbas) {
-		
 		test("load.txt");
 //		testLoop();
 		//testArithmetic();
