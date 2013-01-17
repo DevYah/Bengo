@@ -1,5 +1,6 @@
 package bengo;
 
+
 import java.util.ArrayList;
 
 
@@ -229,9 +230,11 @@ public class Bengo {
 								reservationStations[i].setOperation(instr.getType());
 								if(instr.fields[0].equalsIgnoreCase("LW"))
 								{
+									System.out.println(("THE BASE REGISTER IS " + instr.fields[2]));
+									System.out.println("register status field is " + this.registerStatus.getRegisterStation(instr.fields[2]));
 									DataAction readAction = this.bengoData.read(this.dataBus.getRegisterValue(instr.fields[2]) + Integer.parseInt(instr.fields[3]));
 									int delay = readAction.getNeededCycles();
-									this.reservationStations[i].setDataAction(readAction);
+								//	this.reservationStations[i].setDataAction(readAction);
 									reservationStations[i].assignInstruction(instr, delay);
 									if(instr.fields[2] != null)
 									{
@@ -242,7 +245,9 @@ public class Bengo {
 										}
 										else
 										{
+											System.out.println("RAW HAZARD FOUND");
 											reservationStations[i].setQj(registerStatus.getRegisterStation(instr.fields[2]));
+											System.out.println("RESERVATION STATION : " + reservationStations[i]);
 										}
 									}
 									
@@ -255,7 +260,7 @@ public class Bengo {
 								{
 									DataAction writeAction = this.bengoData.write(this.dataBus.getRegisterValue(instr.fields[2]) + Integer.parseInt(instr.fields[3]), this.dataBus.getRegisterValue(instr.fields[1]));
 									int delay = writeAction.getNeededCycles();
-									this.reservationStations[i].setDataAction(writeAction);
+								//	this.reservationStations[i].setDataAction(writeAction);
 									reservationStations[i].assignInstruction(instr, delay);
 									if(instr.fields[2] != null)
 									{
@@ -396,8 +401,29 @@ public class Bengo {
 		//loop on all reservation Stations
 		for(int i = 0; i < this.reservationStations.length; i++)
 		{
+			if(reservationStations[i].name.contains("LOAD"))
+			System.out.println("RESERVATION STATION " + reservationStations[i] + " TRYING TO EXECUTE");
 			if((reservationStations[i].isBusy()) && ((reservationStations[i].qj == "") || (reservationStations[i].qj == null)) && ((reservationStations[i].qk == "") || (reservationStations[i].qk == null) ))
 			{
+				if(reservationStations[i].name.contains("LOAD"))
+				{
+					if(reservationStations[i].dataAction == null)
+					{
+						if(reservationStations[i].instruction.fields[0].equalsIgnoreCase("LW"))
+						{
+							DataAction readAction = this.bengoData.read(this.dataBus.getRegisterValue(reservationStations[i].instruction.fields[2]) + Integer.parseInt(reservationStations[i].instruction.fields[3]));
+							reservationStations[i].setDataAction(readAction);
+							System.out.println("EXECUTING " + " WITH REGISTER VALUE " + this.dataBus.getRegisterValue(reservationStations[i].instruction.fields[2]));
+						}
+						else
+						{
+							DataAction writeAction = this.bengoData.write(this.dataBus.getRegisterValue(reservationStations[i].instruction.fields[2]) + Integer.parseInt(reservationStations[i].instruction.fields[3]), this.dataBus.getRegisterValue(reservationStations[i].instruction.fields[1]));
+							reservationStations[i].setDataAction(writeAction);
+							
+						}
+						
+					}
+				}
 				// Step a cycle
 				if(reservationStations[i].isFinished())
 				{
@@ -599,7 +625,7 @@ public class Bengo {
 	
 	public static void main(String[] abbas) {
 		
-		test("koko.txt");
+		test("load.txt");
 //		testLoop();
 		//testArithmetic();
 		//testRaw();
@@ -623,7 +649,7 @@ public class Bengo {
 		int lines[] = new int[]{12,16,20};
 		int penalties[] = new int[]{2,4,6};
 		int instructionsPerLine[] = new int[]{2,4,8};
-		Bengo bengo = new Bengo(in,2,2,1,6,3,11,15,4, levels, assoc, lines, penalties,instructionsPerLine,dLevels, numWords,blockSizes,hitTimes,assocs,hitPolicies,missPolicies,50,50);
+		Bengo bengo = new Bengo(in,2,2,4,6,3,11,15,4, levels, assoc, lines, penalties,instructionsPerLine,dLevels, numWords,blockSizes,hitTimes,assocs,hitPolicies,missPolicies,50,50);
 		bengo.bengoData.write(7, (short)77, true);
 		System.out.println(bengo.bengoData.mem);
 		bengo.run();
@@ -667,7 +693,7 @@ public class Bengo {
 	}
 	public static void testLoop()
 	{
-		ArrayList<Instruction> in = assemble("errorProgram.txt");
+		ArrayList<Instruction> in = assemble("loop.txt");
 		int dLevels = 2;
 		int[] numWords = {8, 16};
 		int[] blockSizes =  {1,2};
