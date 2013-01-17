@@ -37,7 +37,7 @@ public class  ReadAction{
 				if (block == null)
 					return -1;
 				else 
-					return block[offset << 2];
+					return block[offset >> 2];
 			}
 			else {
 				return mem.read(address);
