@@ -401,8 +401,8 @@ public class Bengo {
 		//loop on all reservation Stations
 		for(int i = 0; i < this.reservationStations.length; i++)
 		{
-			if(reservationStations[i].name.contains("LOAD"))
-			System.out.println("RESERVATION STATION " + reservationStations[i] + " TRYING TO EXECUTE");
+//			if(reservationStations[i].name.contains("LOAD"))
+	//			System.out.println("RESERVATION STATION " + reservationStations[i] + " TRYING TO EXECUTE");
 			if((reservationStations[i].isBusy()) && ((reservationStations[i].qj == "") || (reservationStations[i].qj == null)) && ((reservationStations[i].qk == "") || (reservationStations[i].qk == null) ))
 			{
 				if(reservationStations[i].name.contains("LOAD"))
