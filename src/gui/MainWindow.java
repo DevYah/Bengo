@@ -791,7 +791,7 @@ public class MainWindow extends javax.swing.JFrame {
                         .addComponent(M6))))
         );
 
-        jTextField5.setText("10");
+        jTextField5.setText("50");
         jTextField5.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jTextField5ActionPerformed(evt);
@@ -851,6 +851,11 @@ public class MainWindow extends javax.swing.JFrame {
         );
 
         jButton3.setText("Configure");
+        jButton3.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
+                jButton3MouseReleased(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -1097,6 +1102,51 @@ public class MainWindow extends javax.swing.JFrame {
 //       bengo.bengoData.mem.write(add, (short)data);
        jTextArea2.append("   "+add + "  :  "+data+"\n");
     }//GEN-LAST:event_jButton1MouseReleased
+
+    private void jButton3MouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton3MouseReleased
+       int loadSt = Integer.parseInt(jTextField4.getText());
+       int loadP = Integer.parseInt(jTextField7.getText());
+       int addSt = Integer.parseInt(jTextField9.getText());
+       int addP = Integer.parseInt(jTextField10.getText());
+       int multSt = Integer.parseInt(jTextField11.getText());
+       int multP = Integer.parseInt(jTextField12.getText());
+       int divP = Integer.parseInt(jTextField14.getText());
+       int rob = Integer.parseInt(jTextField8.getText());
+       int iLevels = Integer.parseInt(jSpinner2.getValue().toString());
+       int iM1 = Integer.parseInt(M4.getText());
+       int iM2 = Integer.parseInt(M5.getText());
+       int iM3 = Integer.parseInt(M6.getText());
+       int [] iAssoc = {iM1,iM2,iM3};
+       int iS1 = Integer.parseInt(S4.getText());
+       int iS2 = Integer.parseInt(S5.getText());
+       int iS3 = Integer.parseInt(S6.getText());
+       int [] iLines = {iS1,iS2,iS3};
+       int iP1 = Integer.parseInt(jTextField13.getText());
+       int iP2 = Integer.parseInt(jTextField15.getText());
+       int iP3 = Integer.parseInt(jTextField16.getText());
+       int [] iPs = {iP1,iP2,iP3};
+       int iL1 = Integer.parseInt(L4.getText());
+       int iL2 = Integer.parseInt(L5.getText());
+       int iL3 = Integer.parseInt(L6.getText());
+       int [] iLs = {iL1,iL2,iL3};
+       int dLevels = Integer.parseInt(jSpinner1.getValue().toString());
+       int s1 = Integer.parseInt(S1.getText());
+       int s2 = Integer.parseInt(S2.getText());
+       int s3 = Integer.parseInt(S3.getText());
+       int [] dS = {s1,s2,s3};
+       int l1 = Integer.parseInt(L1.getText());
+       int l2 = Integer.parseInt(L2.getText());
+       int l3 = Integer.parseInt(L3.getText());
+       int [] dLs = {l1,l2,l3};
+       int p1 = Integer.parseInt(jTextField13.getText());
+       int p2 = Integer.parseInt(jTextField15.getText());
+       int p3 = Integer.parseInt(jTextField16.getText());
+       int [] dHitTimes = {p1,p2,p3};
+       int m1 = Integer.parseInt(M1.getText());
+       int m2 = Integer.parseInt(M2.getText());
+       int m3 = Integer.parseInt(M3.getText());
+       int [] dMs = {m1,m2,m3};
+    }//GEN-LAST:event_jButton3MouseReleased
 
     /**
     * @param args the command line arguments
