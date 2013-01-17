@@ -1238,10 +1238,8 @@ public class MainWindow extends javax.swing.JFrame {
        for(int i=0;i<lines.length;i++){
            String s = lines[i].trim();
            String [] couple = s.split(":");
-           couple[0] = couple[0].trim();
-           couple[1] = couple[1].trim();
-           int add = Integer.parseInt(couple[0]);
-           int val = Integer.parseInt(couple[1]);
+           int add = Integer.parseInt(couple[0].trim());
+           int val = Integer.parseInt(couple[1].trim());
            bengo.bengoData.mem.write(add,(short)val);
        }
        bengo.run();
